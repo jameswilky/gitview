@@ -12,19 +12,18 @@ let limit = 5
 let count = 0;
 let locked = false;
 const traverseRepo = function (repo) {
-  repo.forEach(file => {
-    if (file.type == "file") {
+  repo.forEach(item => {
+    let tokens = item.name.split('.')
+    let fileType = tokens.slice(-1)[0]
+
+    if (item.type == "file" && fileType == "PNG") {
       //if file file is an image
-      github.openImage(file).then(data => {
+      github.openImage(item).then(data => {
         if (data.image.type == "image/png") { //check if is an iamge
           imgURL = URL.createObjectURL(data.image)
-          console.log(data.image)
-
           ui.showImage(imgURL)
         }
       })
-
-
     }
 
     //show folder image or file image like .txt etc determined by file.type
@@ -54,6 +53,7 @@ const traverseRepo = function (repo) {
   });
 }
 
+
 // Search input event listener
 searchUser.addEventListener('keypress', (e) => {
   const key = e.which || e.keyCode;
@@ -70,6 +70,7 @@ searchUser.addEventListener('keypress', (e) => {
         .then(data => {
           traverseRepo(data.repo)
         })
+
 
     }
   }

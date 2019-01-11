@@ -32,7 +32,8 @@ class Github {
     const tokens = file.url.split("/")
     const user = tokens[4]
     const repo_name = tokens[5]
-    const imageResponse = await fetch(`https://raw.githubusercontent.com/${user}/${repo_name}/live/${file.path}`)
+    let url = `https://raw.githubusercontent.com/${user}/${repo_name}/live/${file.path}`
+    const imageResponse = await fetch(url)
 
     const image = await imageResponse.blob();
     return {

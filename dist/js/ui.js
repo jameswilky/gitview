@@ -15,8 +15,25 @@ class UI {
       `;
     //Output repos
     document.querySelector('.gallery').innerHTML += output;
-    console.log(img.width)
+  }
 
+  resizeImages() {
+    const items = document.querySelectorAll('.gallery > div > img')
+    items.forEach(item => {
+      const h = item.naturalHeight
+      const w = item.naturalWidth
+      console.log(h, w)
+
+      if (h >= (2 * w)) {
+        console.log('item is tall')
+        item.parentNode.classList.add('h2')
+      }
+      if ((2 * h) <= w) {
+        console.log('item is wide')
+
+        item.parentNode.classList.add('w2')
+      }
+    })
   }
   // showRepo(){
   //   let output = 
