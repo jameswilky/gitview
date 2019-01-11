@@ -3,37 +3,42 @@ class UI {
     this.profile = document.getElementById('profile');
   }
 
+
+
+
   showImage(blob) {
     // blob is an image object
-    let output = '';
-    let img = document.createElement('img')
-    img.src = blob
-    output += `
+    let img = new Image();
+    img.onload = () => {
+      let output = '';
+
+      output += `
       <div class = "item">
         ${img.outerHTML}
       </div>
       `;
-    //Output repos
-    document.querySelector('.gallery').innerHTML += output;
+      //Output repos
+      let parent = document.querySelector('.gallery')
+      parent.innerHTML += output;
+      this.resizeImage(parent.lastElementChild)
+    }
+    img.src = blob
   }
 
-  resizeImages() {
-    const items = document.querySelectorAll('.gallery > div > img')
-    items.forEach(item => {
-      const h = item.naturalHeight
-      const w = item.naturalWidth
-      console.log(h, w)
 
-      if (h >= (2 * w)) {
-        console.log('item is tall')
-        item.parentNode.classList.add('h2')
-      }
-      if ((2 * h) <= w) {
-        console.log('item is wide')
 
-        item.parentNode.classList.add('w2')
-      }
-    })
+  resizeImage(item) {
+    const img = item.firstElementChild
+    const h = img.naturalHeight
+    const w = img.naturalWidth
+    console.log(h, w)
+
+    if (h >= (2 * w)) {
+      item.classList.add('h2')
+    }
+    if ((2 * h) <= w) {
+      item.classList.add('w2')
+    }
   }
   // showRepo(){
   //   let output = 
