@@ -6,6 +6,7 @@ class Github {
     this.repos_sort = 'created: asc'
   }
 
+
   async getRepo(url) {
     const tokens = url.split("/")
     const user = tokens[3]
@@ -27,6 +28,17 @@ class Github {
     }
   }
 
+  async openImage(file) {
+    const tokens = file.url.split("/")
+    const user = tokens[4]
+    const repo_name = tokens[5]
+    const imageResponse = await fetch(`https://raw.githubusercontent.com/${user}/${repo_name}/live/${file.path}`)
+
+    const image = await imageResponse.blob();
+    return {
+      image
+    }
+  }
   // async getUser(user) {
   //   const profileResponse = await fetch(`https://api.github.com/users/${user}?client_id=${this.client_id}&client_secret=${this.client_secret}`)
   //   const repoResponse = await fetch(`https://api.github.com/users/${user}/repos?per_page=${this.repos_count}&sort=${this.repos_sort}&client_id=${this.client_id}&client_secret=${this.client_secret}`)

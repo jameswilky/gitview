@@ -8,37 +8,49 @@ const searchUser = document.getElementById('searchUser');
 
 // Testing URL
 // https://github.com/Gethe/wow-ui-textures
-
+let limit = 5
+let count = 0;
+let locked = false;
 const traverseRepo = function (repo) {
-  let limit = 5
-  let count = 0;
   repo.forEach(file => {
     if (file.type == "file") {
-      // Display file 
-    }
-    else if (file.type == "dir") {
-      // Open folder
-      console.log(file)
-      const url = file.url
-      if (count < limit) {
-        github.openDir(url)
-          .then(data => {
-            //recursively call function untill no directories left
-            // console.log('called recursively')
-            // traverseRepo(data.dir)
-          })
-          .catch(err => {
-            console.log("Error Found", err)
-          })
-        count += 1
+      //if file file is an image
+      github.openImage(file).then(data => {
+        if (data.image.type == "image/png") { //check if is an iamge
+          imgURL = URL.createObjectURL(data.image)
+          console.log(data.image)
 
-      }
-      else {
-        console.log("Custom Limit Reached")
-      }
+          ui.showImage(imgURL)
+        }
+      })
 
 
     }
+
+    //show folder image or file image like .txt etc determined by file.type
+    // ui.showSprite(file)
+
+
+    //   // Open folder
+    //   const url = file.url
+    //   if (count < limit) {
+    //     github.openDir(url)
+    //       .then(data => {
+    //         //recursively call function untill no directories left
+    //         // console.log('called recursively')
+    //         // traverseRepo(data.dir)
+    //       })
+    //       .catch(err => {
+    //         console.log("Error Found", err)
+    //       })
+    //     count += 1
+
+    //   }
+    //   else {
+    //     console.log("Custom Limit Reached")
+    //     locked = true;
+    //   }
+    // }
   });
 }
 
