@@ -1,5 +1,6 @@
 //Init Github
 const github = new Github
+
 //Init UI
 const ui = new UI;
 
@@ -32,6 +33,7 @@ const traverseRepo = function (repo) {
     }
     else if (item.type == "dir") {
       //If item is a folder
+      ui.createFolder(item.name, item.url)
 
       //Display image of a folder in the nav bar with a link that will be passed to
       // the openDir function

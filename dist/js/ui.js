@@ -1,6 +1,25 @@
 class UI {
   constructor() {
-    this.profile = document.getElementById('profile');
+    this.folderToggleBtn = document.querySelector('.folderToggle');
+    this.folderToggleBtn.addEventListener('click', () => {
+      let folders = document.querySelectorAll('.folder')
+
+      let visible = folders[0].classList.contains('visible')
+
+      if (visible) {
+        this.folderToggleBtn.innerHTML = 'Show Folders'
+      }
+      else {
+        this.folderToggleBtn.innerHTML = 'Hide Folders'
+
+      }
+
+      folders.forEach(folder => {
+        folder.classList.toggle('visible')
+
+      })
+
+    })
   }
   showImage(blob) {
     // blob is an image object
@@ -40,11 +59,24 @@ class UI {
     parent.innerHTML += output;
   }
 
+  createFolder(name, url) {
+    let output = ''
+    output +=
+      `
+      <div class = "item folder visible">
+        <img src = "images/folder.png">
+        <div>
+        ${name}
+        </div>
+      </div>
+      `
+    let parent = document.querySelector('.gallery')
+    parent.innerHTML += output;
+  }
   fitImage(item) {
     const img = item.firstElementChild
     const h = img.naturalHeight
     const w = img.naturalWidth
-    console.log(h, w)
 
 
     if (h >= (2 * w)) {
@@ -59,32 +91,6 @@ class UI {
       item.classList.add('w2')
     }
   }
-  // showRepo(){
-  //   let output = 
-  // }
-  // showRepos(repos) {
-  //   let output = '';
-
-  //   repos.forEach(function (repo) {
-  //     output += `
-  //     <div class="card card-body" mb-2>
-  //       <div class="row">
-  //         <div class="col-md-6">
-  //           <a href="${repo.html_url}" target="_blank">${repo.name}</a>
-  //         </div>
-  //         <div class="col-md-6">
-  //           <span class="badge badge-primary">Stars: ${repo.stargazers_count}</span> 
-  //           <span class="badge badge-secondary">Watchers: ${repo.watchers_count}</span> 
-  //           <span class="badge badge-success">Forks: ${repo.forks_count}</span> 
-  //         </div>
-  //       </div>
-  //     </div>
-  //     `;
-  //   })
-
-  //   //Output repos
-  //   document.getElementById('repos').innerHTML = output;
-  // }
   // Show alert messages
   showAlert(message, className) {
     //Clear any remaining alerts
@@ -119,8 +125,11 @@ class UI {
     }
   }
 
+
   //Clear profile
   clearProfile() {
     this.profile.innerHTML = ''
   }
+
+
 }
