@@ -2,10 +2,6 @@ class UI {
   constructor() {
     this.profile = document.getElementById('profile');
   }
-
-
-
-
   showImage(blob) {
     // blob is an image object
     let img = new Image();
@@ -20,14 +16,18 @@ class UI {
       //Output repos
       let parent = document.querySelector('.gallery')
       parent.innerHTML += output;
-      this.resizeImage(parent.lastElementChild)
+      this.fitImage(parent.lastElementChild)
     }
     img.src = blob
   }
+  resizeImage(size) {
+    let grid = document.querySelector('.gallery')
+    grid.style['grid-template-columns'] = `repeat(auto-fit, ${size}px)`;
+    grid.style['grid-auto-rows'] = `${size}px`;
 
+  }
 
-
-  resizeImage(item) {
+  fitImage(item) {
     const img = item.firstElementChild
     const h = img.naturalHeight
     const w = img.naturalWidth
@@ -38,6 +38,13 @@ class UI {
     }
     if ((2 * h) <= w) {
       item.classList.add('w2')
+    }
+
+    if (h > 480 && w > 480) {
+      item.classList.add('h2')
+      item.classList.add('w2')
+
+
     }
   }
   // showRepo(){
