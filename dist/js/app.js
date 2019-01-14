@@ -4,6 +4,9 @@ const github = new Github
 //Init UI
 const ui = new UI;
 
+let PATH;
+
+
 // Search input
 const searchUser = document.getElementById('searchUser');
 
@@ -63,7 +66,6 @@ const traverseRepo = function (repo) {
   });
 }
 
-
 // Search input event listener
 searchUser.addEventListener('keypress', (e) => {
   const key = e.which || e.keyCode;
@@ -80,10 +82,29 @@ searchUser.addEventListener('keypress', (e) => {
         .then(data => {
           traverseRepo(data.repo)
         })
-
-
     }
   }
+
+
+  document.addEventListener('click', e => {
+    let folderToggleBtn = document.querySelector('.folderToggle');
+
+    if (e.target == folderToggleBtn) {
+      ui.toggleFolder(folderToggleBtn);
+    }
+
+    let folders = document.querySelectorAll('.folder > *')
+
+    folders.forEach(folder => {
+      if (e.target == folder) {
+        let url = folder.parentElement.querySelector('input').value
+        github.openDir(url).then(data => {
+          ui.clearGallery()
+          traverseRepo(data.dir)
+        })
+      }
+    })
+  })
 
   // if (userText !== '') {
   //   // Make http call

@@ -1,26 +1,24 @@
 class UI {
   constructor() {
-    this.folderToggleBtn = document.querySelector('.folderToggle');
-    this.folderToggleBtn.addEventListener('click', () => {
-      let folders = document.querySelectorAll('.folder')
-
-      let visible = folders[0].classList.contains('visible')
-
-      if (visible) {
-        this.folderToggleBtn.innerHTML = 'Show Folders'
-      }
-      else {
-        this.folderToggleBtn.innerHTML = 'Hide Folders'
-
-      }
-
-      folders.forEach(folder => {
-        folder.classList.toggle('visible')
-
-      })
+    this.gallery = document.querySelector('.gallery')
+  }
+  toggleFolder(btn) {
+    let folders = document.querySelectorAll('.folder')
+    let visible = folders[0].classList.contains('visible')
+    if (visible) {
+      btn.innerHTML = 'Show Folders'
+    }
+    else {
+      btn.innerHTML = 'Hide Folders'
+    }
+    folders.forEach(folder => {
+      folder.classList.toggle('visible')
 
     })
   }
+
+
+
   showImage(blob) {
     // blob is an image object
     let img = new Image();
@@ -33,16 +31,15 @@ class UI {
       </div>
       `;
       //Output repos
-      let parent = document.querySelector('.gallery')
-      parent.innerHTML += output;
-      this.fitImage(parent.lastElementChild)
+      this.gallery.innerHTML += output;
+      this.fitImage(this.gallery.lastElementChild)
     }
     img.src = blob
   }
   resizeImage(size) {
-    let grid = document.querySelector('.gallery')
-    grid.style['grid-template-columns'] = `repeat(auto-fit, ${size}px)`;
-    grid.style['grid-auto-rows'] = `${size}px`;
+
+    this.gallery.style['grid-template-columns'] = `repeat(auto-fit, ${size}px)`;
+    this.gallery.style['grid-auto-rows'] = `${size}px`;
 
   }
 
@@ -55,8 +52,7 @@ class UI {
       </div>
       `;
     //Output repos
-    let parent = document.querySelector('.gallery')
-    parent.innerHTML += output;
+    this.gallery.innerHTML += output;
   }
 
   createFolder(name, url) {
@@ -64,14 +60,15 @@ class UI {
     output +=
       `
       <div class = "item folder visible">
-        <img src = "images/folder.png">
+        <img src = "images/folder.png" title=${name}>
         <div>
         ${name}
-        </div>
+        <div/>
+        <input type="hidden" value=${url}>
       </div>
       `
-    let parent = document.querySelector('.gallery')
-    parent.innerHTML += output;
+
+    this.gallery.innerHTML += output;
   }
   fitImage(item) {
     const img = item.firstElementChild
@@ -127,8 +124,8 @@ class UI {
 
 
   //Clear profile
-  clearProfile() {
-    this.profile.innerHTML = ''
+  clearGallery() {
+    this.gallery.innerHTML = ''
   }
 
 
