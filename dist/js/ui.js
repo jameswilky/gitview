@@ -27,24 +27,27 @@ class UI {
 
   }
 
+  showSprite(image) {
+    // make ajax call to https://github.com/dmhendricks/file-icon-vectors/blob/master/dist/icons/classic/msi.svg
+  }
+
   fitImage(item) {
     const img = item.firstElementChild
     const h = img.naturalHeight
     const w = img.naturalWidth
     console.log(h, w)
 
+
     if (h >= (2 * w)) {
       item.classList.add('h2')
     }
-    if ((2 * h) <= w) {
+    else if ((2 * h) <= w) {
       item.classList.add('w2')
     }
 
-    if (h > 480 && w > 480) {
+    else if (h > 480 && w > 480) {
       item.classList.add('h2')
       item.classList.add('w2')
-
-
     }
   }
   // showRepo(){

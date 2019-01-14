@@ -8,9 +8,6 @@ const searchUser = document.getElementById('searchUser');
 
 // Testing URL
 // https://github.com/Gethe/wow-ui-textures
-let limit = 5
-let count = 0;
-let locked = false;
 const traverseRepo = function (repo) {
   repo.forEach(item => {
     let tokens = item.name.split('.')
@@ -25,9 +22,17 @@ const traverseRepo = function (repo) {
         }
       })
     }
+    else if (item.type == "file") {
+      //If item is afile but not a picture
 
-    //show folder image or file image like .txt etc determined by file.type
-    // ui.showSprite(file)
+      //Display sprite of a txt file
+    }
+    else if (item.type == "dir") {
+      //If item is a folder
+
+      //Display image of a folder in the nav bar with a link that will be passed to
+      // the openDir function
+    }
 
 
     //   // Open folder
