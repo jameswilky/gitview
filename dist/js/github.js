@@ -42,7 +42,7 @@ class Github {
   }
 
   async getFileIcon(filetype) {
-    const url = `"https://raw.githubusercontent.com/dmhendricks/file-icon-vectors/master/dist/icons/vivid/${filetype}.svg"`
+    const url = `https://raw.githubusercontent.com/dmhendricks/file-icon-vectors/master/dist/icons/vivid/${filetype}.svg`
     const response = await fetch(url)
     const svg = await response.text();
     return {

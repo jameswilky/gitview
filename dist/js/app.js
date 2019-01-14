@@ -13,7 +13,7 @@ const traverseRepo = function (repo) {
     let tokens = item.name.split('.')
     let fileType = tokens.slice(-1)[0]
 
-    if (item.type == "file" && fileType == "PNG") {
+    if (item.type == "file" && fileType == "PNG") { //use regex to get all case lower/upper types
       //if file file is an image
       github.openImage(item).then(data => {
         if (data.image.type == "image/png") { //check if is an iamge
@@ -23,7 +23,10 @@ const traverseRepo = function (repo) {
       })
     }
     else if (item.type == "file") {
-      //If item is afile but not a picture
+      //If item is a file but not a picture
+      github.getFileIcon(fileType.toLowerCase()).then(data => {
+        ui.showSVG(data.svg)
+      })
 
       //Display sprite of a txt file
     }

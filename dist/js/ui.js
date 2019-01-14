@@ -27,8 +27,17 @@ class UI {
 
   }
 
-  showSprite(image) {
-    // make ajax call to https://github.com/dmhendricks/file-icon-vectors/blob/master/dist/icons/classic/msi.svg
+  showSVG(svg) {
+    let output = '';
+
+    output += `
+      <div class = "item">
+        ${svg}
+      </div>
+      `;
+    //Output repos
+    let parent = document.querySelector('.gallery')
+    parent.innerHTML += output;
   }
 
   fitImage(item) {
