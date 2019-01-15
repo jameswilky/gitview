@@ -3,10 +3,21 @@ class UI {
     this.gallery = document.querySelector('.gallery')
     this.overlay = document.querySelector('.overlay');
     this.overlayImage = this.overlay.querySelector('img');
+
+    this.overlayImage.addEventListener('mouseenter', e => {
+      this.imageZoomResult.style.display = "initial"
+
+    })
+    this.overlayImage.addEventListener('mouseleave', e => {
+      this.imageZoomResult.style.display = "none"
+
+    })
     this.overlayClose = this.overlay.querySelector('.close');
     this.folderToggleBtn = document.querySelector('.folderToggle');
     this.items;
     this.backBtn = document.querySelector('.back');
+
+    this.imageZoomResult = document.querySelector('.img-zoom-result')
 
 
   }
@@ -28,10 +39,13 @@ class UI {
   openOverlay(target) {
     this.overlayImage.src = target.src;
     this.overlay.classList.add('open')
-    this.imageZoom("myimage", "myresult")
+    this.imageZoomResult.style.display = "initial"
+
+    this.imageZoom("myimage")
   }
 
   closeOverlay() {
+    this.imageZoomResult.style.display = "none"
     this.overlay.classList.remove('open');
   }
 
@@ -144,10 +158,10 @@ class UI {
     this.gallery.innerHTML = ''
   }
 
-  imageZoom(imgID, resultID) {
-    let img, lens, result, cx, cy;
+  imageZoom(imgID) {
+    var img, lens, result, cx, cy;
     img = document.getElementById(imgID);
-    result = document.getElementById(resultID);
+    result = this.imageZoomResult
     /* Create lens: */
     lens = document.createElement("DIV");
     lens.setAttribute("class", "img-zoom-lens");
@@ -166,7 +180,7 @@ class UI {
     lens.addEventListener("touchmove", moveLens);
     img.addEventListener("touchmove", moveLens);
     function moveLens(e) {
-      let pos, x, y;
+      var pos, x, y;
       /* Prevent any other actions that may occur when moving over the image */
       e.preventDefault();
       /* Get the cursor's x and y positions: */
@@ -180,23 +194,23 @@ class UI {
       if (y > img.height - lens.offsetHeight) { y = img.height - lens.offsetHeight; }
       if (y < 0) { y = 0; }
       /* Set the position of the lens: */
-      lens.style.left = x + 20 + "px";
-      lens.style.top = y + 50 + "px";
+      lens.style.left = x + "px";
+      lens.style.top = y + "px";
       /* Display what the lens "sees": */
       result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
     }
     function getCursorPos(e) {
-      let a, x = 0, y = 0;
+      var a, x = 0, y = 0;
       e = e || window.event;
       /* Get the x and y positions of the image: */
       a = img.getBoundingClientRect();
       /* Calculate the cursor's x and y coordinates, relative to the image: */
-      x = e.pageX - a.left;
-      y = e.pageY - a.top;
+      x = e.pageX - a.left - 20; // removed 20 pixels due to padding
+      y = e.pageY - a.top - 20;
+      console.log(x, y)
       /* Consider any page scrolling: */
       x = x - window.pageXOffset;
       y = y - window.pageYOffset;
-
       return { x: x, y: y };
     }
   }
@@ -204,3 +218,8 @@ class UI {
 
 }
 
+document.addEventListener('mousemove', e => {
+  let div = document.querySelector(".img-zoom-result")
+  div.style.left = e.pageX + 'px'
+  div.style.top = e.pageY + 'px'
+})

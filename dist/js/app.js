@@ -64,6 +64,7 @@ searchUser.addEventListener('keypress', (e) => {
   }
 
 
+
   document.addEventListener('click', e => {
 
     // Folder view Toggle

@@ -16,6 +16,7 @@
   left: 0;
   display: none;
   z-index: 2;
+ 
 }
 
 .overlay.open {
@@ -27,11 +28,42 @@
 .overlay-inner {
   background: white;
   border: 2px solid rgba(0, 0, 0, 0.1);
-
   border-radius: 5px;
   padding: 20px;
-  display:grid;
-  /* justify-items: center; */
+  max-width: 80%;
+  display: grid;
+
+}
+@media (min-width: 992px) {.overlay-inner{max-width:70%;}}
+@media (min-width: 1200px) {.overlay-inner{max-width:40%;}}
+
+
+
+.overlay-inner > img {
+  width: 100%;
+  padding:20px;
+  
+}
+
+/* The box around the cursor*/
+.img-zoom-lens {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  /*set the size of the lens:*/
+  width: 40px;
+  height: 40px;
+}
+
+.img-zoom-result {
+  position: absolute;
+  /*set the size of the result div:*/
+  width: 200px;
+  height: 200px;
+  z-index: 2;
+  display: none;
+  border-radius: 100px;
+  background: rgba(0, 0, 0, 0.2)
+
 }
 .close {
   background: none;
@@ -108,23 +140,4 @@
 
 * {box-sizing: border-box;}
 
-.img-zoom-container {
-  position: relative;
-}
 
-.img-zoom-lens {
-  position: absolute;
-  border: 1px solid #d4d4d4;
-  /*set the size of the lens:*/
-  width: 40px;
-  height: 40px;
-  visibility: hidden;
-}
-
-.img-zoom-result {
-  border: 1px solid #d4d4d4;
-  /*set the size of the result div:*/
-  width: 300px;
-  height: 300px;
-  display: inline-block;
-}
