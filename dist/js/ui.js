@@ -1,15 +1,23 @@
 class UI {
   constructor() {
     this.gallery = document.querySelector('.gallery')
+    this.overlay = document.querySelector('.overlay');
+    this.overlayImage = this.overlay.querySelector('img');
+    this.overlayClose = this.overlay.querySelector('.close');
+    this.folderToggleBtn = document.querySelector('.folderToggle');
+    this.items;
+    this.backBtn = document.querySelector('.back');
+
+
   }
-  toggleFolder(btn) {
+  toggleFolder() {
     let folders = document.querySelectorAll('.folder')
     let visible = folders[0].classList.contains('visible')
     if (visible) {
-      btn.innerHTML = 'Show Folders'
+      this.folderToggleBtn.innerHTML = 'Show Folders'
     }
     else {
-      btn.innerHTML = 'Hide Folders'
+      this.folderToggleBtn.innerHTML = 'Hide Folders'
     }
     folders.forEach(folder => {
       folder.classList.toggle('visible')
@@ -17,7 +25,15 @@ class UI {
     })
   }
 
+  openOverlay(target) {
+    this.overlayImage.src = target.src;
+    this.overlay.classList.add('open')
+    this.imageZoom("myimage", "myresult")
+  }
 
+  closeOverlay() {
+    this.overlay.classList.remove('open');
+  }
 
   showImage(blob) {
     // blob is an image object
@@ -26,7 +42,7 @@ class UI {
       let output = '';
 
       output += `
-      <div class = "item">
+      <div class="item">
         ${img.outerHTML}
       </div>
       `;
@@ -47,7 +63,7 @@ class UI {
     let output = '';
 
     output += `
-      <div class = "item">
+      <div class="item">
         ${svg}
       </div>
       `;
@@ -59,14 +75,14 @@ class UI {
     let output = ''
     output +=
       `
-      <div class = "item folder visible">
-        <img src = "images/folder.png" title=${name}>
-        <div>
-        ${name}
-        <div/>
-        <input type="hidden" value=${url}>
+      <div class="item folder visible">
+        <img src="images/folder.png" title=${name}>
+          <div>
+            ${name}
+            <div />
+            <input type="hidden" value=${url}>
       </div>
-      `
+            `
 
     this.gallery.innerHTML += output;
   }
@@ -128,5 +144,63 @@ class UI {
     this.gallery.innerHTML = ''
   }
 
+  imageZoom(imgID, resultID) {
+    let img, lens, result, cx, cy;
+    img = document.getElementById(imgID);
+    result = document.getElementById(resultID);
+    /* Create lens: */
+    lens = document.createElement("DIV");
+    lens.setAttribute("class", "img-zoom-lens");
+    /* Insert lens: */
+    img.parentElement.insertBefore(lens, img);
+    /* Calculate the ratio between result DIV and lens: */
+    cx = result.offsetWidth / lens.offsetWidth;
+    cy = result.offsetHeight / lens.offsetHeight;
+    /* Set background properties for the result DIV */
+    result.style.backgroundImage = "url('" + img.src + "')";
+    result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
+    /* Execute a function when someone moves the cursor over the image, or the lens: */
+    lens.addEventListener("mousemove", moveLens);
+    img.addEventListener("mousemove", moveLens);
+    /* And also for touch screens: */
+    lens.addEventListener("touchmove", moveLens);
+    img.addEventListener("touchmove", moveLens);
+    function moveLens(e) {
+      let pos, x, y;
+      /* Prevent any other actions that may occur when moving over the image */
+      e.preventDefault();
+      /* Get the cursor's x and y positions: */
+      pos = getCursorPos(e);
+      /* Calculate the position of the lens: */
+      x = pos.x - (lens.offsetWidth / 2);
+      y = pos.y - (lens.offsetHeight / 2);
+      /* Prevent the lens from being positioned outside the image: */
+      if (x > img.width - lens.offsetWidth) { x = img.width - lens.offsetWidth; }
+      if (x < 0) { x = 0; }
+      if (y > img.height - lens.offsetHeight) { y = img.height - lens.offsetHeight; }
+      if (y < 0) { y = 0; }
+      /* Set the position of the lens: */
+      lens.style.left = x + 20 + "px";
+      lens.style.top = y + 50 + "px";
+      /* Display what the lens "sees": */
+      result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
+    }
+    function getCursorPos(e) {
+      let a, x = 0, y = 0;
+      e = e || window.event;
+      /* Get the x and y positions of the image: */
+      a = img.getBoundingClientRect();
+      /* Calculate the cursor's x and y coordinates, relative to the image: */
+      x = e.pageX - a.left;
+      y = e.pageY - a.top;
+      /* Consider any page scrolling: */
+      x = x - window.pageXOffset;
+      y = y - window.pageYOffset;
+
+      return { x: x, y: y };
+    }
+  }
+
 
 }
+

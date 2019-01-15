@@ -1,1 +1,0 @@
-https://api.github.com/repos/jameswilky/ascension-talent-calculator/contents

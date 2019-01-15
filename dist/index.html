@@ -30,16 +30,17 @@
     <div class="card card-body" mb-2>
       <div class="toolbar">
         <button class="folderToggle">Toggle Folders</button>
+        <button class="back"> Previous Folder </button>
       </div>
-      <div class="nav-container">
-        <!-- Display folders that can be scrolled through and selected -->
+      <div class="overlay">
+        <div class="overlay-inner img-zoom-container">
+          <button class="close">×</button>
+          <img id="myimage">
+        </div>
+
+        <div id="myresult" class="img-zoom-result"></div>
+
       </div>
-      <!-- <div class="overlay">
-          <div class="overlay-inner">
-            <button class="close">× Close</button>
-            <img>
-          </div>
-        </div> -->
 
       <section class="gallery">
       </section>

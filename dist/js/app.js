@@ -4,8 +4,7 @@ const github = new Github
 //Init UI
 const ui = new UI;
 
-let PATH;
-
+let history;
 
 // Search input
 const searchUser = document.getElementById('searchUser');
@@ -31,38 +30,13 @@ const traverseRepo = function (repo) {
       github.getFileIcon(fileType.toLowerCase()).then(data => {
         ui.showSVG(data.svg)
       })
-
       //Display sprite of a txt file
     }
     else if (item.type == "dir") {
       //If item is a folder
       ui.createFolder(item.name, item.url)
-
-      //Display image of a folder in the nav bar with a link that will be passed to
-      // the openDir function
     }
 
-
-    //   // Open folder
-    //   const url = file.url
-    //   if (count < limit) {
-    //     github.openDir(url)
-    //       .then(data => {
-    //         //recursively call function untill no directories left
-    //         // console.log('called recursively')
-    //         // traverseRepo(data.dir)
-    //       })
-    //       .catch(err => {
-    //         console.log("Error Found", err)
-    //       })
-    //     count += 1
-
-    //   }
-    //   else {
-    //     console.log("Custom Limit Reached")
-    //     locked = true;
-    //   }
-    // }
   });
 }
 
@@ -74,36 +48,70 @@ searchUser.addEventListener('keypress', (e) => {
     let targetRepo = e.target.value;
     targetRepo = "https://github.com/Gethe/wow-ui-textures"
 
+
     //Validate that format is correct
     let valid = true //temp
 
     if (valid) {
+      ui.clearGallery()
+      history = []
       github.getRepo(targetRepo)
         .then(data => {
           traverseRepo(data.repo)
+          history.push(data.repo)
         })
     }
   }
 
 
   document.addEventListener('click', e => {
-    let folderToggleBtn = document.querySelector('.folderToggle');
 
-    if (e.target == folderToggleBtn) {
-      ui.toggleFolder(folderToggleBtn);
+    // Folder view Toggle
+    if (e.target == ui.folderToggleBtn) {
+      ui.toggleFolder();
+      return
     }
 
-    let folders = document.querySelectorAll('.folder > *')
+    // Go back to previous directory
+    if (e.target == ui.backBtn) {
+      ui.clearGallery()
+      history.pop()
+      traverseRepo(history[history.length - 1]) //Pass Last element addition to history
+      return
+    }
 
-    folders.forEach(folder => {
-      if (e.target == folder) {
-        let url = folder.parentElement.querySelector('input').value
-        github.openDir(url).then(data => {
-          ui.clearGallery()
-          traverseRepo(data.dir)
-        })
+    // Close ?
+    if (e.target == ui.overlayClose) {
+      ui.closeOverlay()
+      return
+    }
+
+
+    // Check items too see if they were clicked
+    ui.items = document.querySelectorAll('.item > *')
+
+    ui.items.forEach(item => {
+      if (e.target == item) {
+        //Check if item is a folder
+        if (item.parentElement.classList.contains('folder')) {
+          let url = item.parentElement.querySelector('input').value
+          github.openDir(url).then(data => {
+            ui.clearGallery()
+            history.push(data.dir)
+            traverseRepo(data.dir)
+          })
+        }
+        else {
+          ui.openOverlay(e.target)
+
+        }
+        return
       }
     })
+
+
+
+
   })
 
   // if (userText !== '') {
