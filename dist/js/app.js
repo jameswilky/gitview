@@ -48,11 +48,11 @@ searchUser.addEventListener('keypress', (e) => {
     let targetRepo = e.target.value;
     targetRepo = "https://github.com/Gethe/wow-ui-textures"
 
-
     //Validate that format is correct
     let valid = true //temp
 
     if (valid) {
+      ui.showToolbar()
       ui.clearGallery()
       history = []
       github.getRepo(targetRepo)

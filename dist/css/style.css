@@ -1,11 +1,70 @@
+.toolbar{
+  display: none;
+  grid-template-columns: repeat(5,1fr);
+  grid-template-rows: 1fr;
+
+}
+
+.fas{
+  color:#4582EC;
+  font-size: 200%;
+}
+.fas:hover{
+  color: #d9534f;
+}
+
+.__off{
+  color: #adb5bd
+}
+
+
+.slidecontainer {
+  width: 100%; /* Width of the outside container */
+
+}
+
+/* The slider itself */
+.slider {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 25px; /* Specified height */
+  background:rgba(69,130,236,0.5); /* Grey background */
+  outline: none; /* Remove outline */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+  border-radius: 5px;
+}
+
+/* Mouse-over effects */
+.slider:hover {
+  opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 15px; /* Set a specific slider handle width */
+  height: 40px; /* Slider handle height */
+  background: #4582EC; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+  border-radius: 5px;
+
+}
+
 .gallery{
   display:grid;
-  grid-template-columns: repeat(auto-fit, 100px);
-  grid-auto-rows: 100px;
+  grid-template-columns: repeat(auto-fit, 96px);
+  grid-auto-rows: 96px;
   grid-auto-flow: dense;
-  justify-content: center;
   grid-gap: 10px;
+  padding-top: 20px;
+
+  justify-content: center;
 }
+
+
 
 .overlay {
   position: fixed;
@@ -16,7 +75,7 @@
   left: 0;
   display: none;
   z-index: 2;
- 
+
 }
 
 .overlay.open {
@@ -39,7 +98,7 @@
 
 
 .overlay-inner > h2{
-  white-space: nowrap; 
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -50,7 +109,7 @@
   padding:20px;
   justify-self: center;
   border-radius: 4%;
-  
+
 }
 
 /* The box around the cursor*/
@@ -82,18 +141,18 @@
 
 
 .item.folder{
-  visibility: 'hidden'; 
+  visibility: 'hidden';
   display:  none;
 
 
 }
 .item.folder > div{
-  white-space: nowrap; 
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
   text-align: center;
-  
+
 }
 
 
@@ -103,8 +162,8 @@
 
 }
 .item.folder > img{
-  width:50px;
-  height:50px;
+  width:48px;
+  height:48px;
   justify-self: center;
   align-self: center;
 }
@@ -117,10 +176,10 @@
   border-radius: 5px;
   padding: 5px;
   cursor: pointer;
-  
+
 }
 .item > svg{
-  max-width:50px;
+  max-width:48px;
   justify-self: center;
   align-self: center;
 }

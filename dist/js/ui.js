@@ -14,22 +14,32 @@ class UI {
 
     })
     this.overlayClose = this.overlay.querySelector('.close');
-    this.folderToggleBtn = document.querySelector('.folderToggle');
+    this.folderToggleBtn = document.querySelector('.folderToggleBtn');
     this.items;
     this.backBtn = document.querySelector('.back');
 
     this.imageZoomResult = document.querySelector('.img-zoom-result')
 
+    this.toolbar = document.querySelector('.toolbar')
 
+    this.slider = document.querySelector('.slider');
+    this.slider.oninput = () => {
+      this.resizeImage(this.slider.value);
+    }
+  }
+
+  showToolbar() {
+    this.toolbar.style.display = "grid"
   }
   toggleFolder() {
     let folders = document.querySelectorAll('.folder')
     let visible = folders[0].classList.contains('visible')
+    console.log(visible)
     if (visible) {
-      this.folderToggleBtn.innerHTML = 'Show Folders'
+      this.folderToggleBtn.classList.add('__off')
     }
     else {
-      this.folderToggleBtn.innerHTML = 'Hide Folders'
+      this.folderToggleBtn.classList.remove('__off')
     }
     folders.forEach(folder => {
       folder.classList.toggle('visible')
@@ -70,12 +80,20 @@ class UI {
     img.src = blob
     img.title = name;
   }
-  resizeImage(size) {
+  resizeImage(value) {
+    let size;
+    if (value == 1) { size = 48 }
+    if (value == 2) { size = 96 }
+    if (value == 3) { size = 192 }
+    console.log(size)
 
+    let folders = document.querySelectorAll('.item.folder > img')
+    folders.forEach(folder => {
+      folder.style.width = size / 2 + 'px'
+      folder.style.height = size / 2 + 'px'
+    })
     this.gallery.style['grid-template-columns'] = `repeat(auto-fit, ${size}px)`;
     this.gallery.style['grid-auto-rows'] = `${size}px`;
-
-
   }
 
   showSVG(svg) {
