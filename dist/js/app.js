@@ -21,7 +21,7 @@ const traverseRepo = function (repo) {
       github.openImage(item).then(data => {
         if (data.image.type == "image/png") { //check if is an iamge
           imgURL = URL.createObjectURL(data.image)
-          ui.showImage(imgURL)
+          ui.showImage(imgURL, item.name)
         }
       })
     }

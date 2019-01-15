@@ -3,6 +3,7 @@ class UI {
     this.gallery = document.querySelector('.gallery')
     this.overlay = document.querySelector('.overlay');
     this.overlayImage = this.overlay.querySelector('img');
+    this.overlayTitle = this.overlay.querySelector('h4')
 
     this.overlayImage.addEventListener('mouseenter', e => {
       this.imageZoomResult.style.display = "initial"
@@ -38,6 +39,7 @@ class UI {
 
   openOverlay(target) {
     this.overlayImage.src = target.src;
+    this.overlayTitle.innerHTML = target.title;
     this.overlay.classList.add('open')
     this.imageZoomResult.style.display = "initial"
 
@@ -49,7 +51,7 @@ class UI {
     this.overlay.classList.remove('open');
   }
 
-  showImage(blob) {
+  showImage(blob, name) {
     // blob is an image object
     let img = new Image();
     img.onload = () => {
@@ -58,6 +60,7 @@ class UI {
       output += `
       <div class="item">
         ${img.outerHTML}
+        
       </div>
       `;
       //Output repos
@@ -65,11 +68,13 @@ class UI {
       this.fitImage(this.gallery.lastElementChild)
     }
     img.src = blob
+    img.title = name;
   }
   resizeImage(size) {
 
     this.gallery.style['grid-template-columns'] = `repeat(auto-fit, ${size}px)`;
     this.gallery.style['grid-auto-rows'] = `${size}px`;
+
 
   }
 
@@ -174,13 +179,11 @@ class UI {
     result.style.backgroundImage = "url('" + img.src + "')";
     result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
     /* Execute a function when someone moves the cursor over the image, or the lens: */
-    lens.addEventListener("mousemove", moveLens);
     img.addEventListener("mousemove", moveLens);
     /* And also for touch screens: */
-    lens.addEventListener("touchmove", moveLens);
     img.addEventListener("touchmove", moveLens);
     function moveLens(e) {
-      var pos, x, y;
+      let pos, x, y;
       /* Prevent any other actions that may occur when moving over the image */
       e.preventDefault();
       /* Get the cursor's x and y positions: */
@@ -188,26 +191,17 @@ class UI {
       /* Calculate the position of the lens: */
       x = pos.x - (lens.offsetWidth / 2);
       y = pos.y - (lens.offsetHeight / 2);
-      /* Prevent the lens from being positioned outside the image: */
-      if (x > img.width - lens.offsetWidth) { x = img.width - lens.offsetWidth; }
-      if (x < 0) { x = 0; }
-      if (y > img.height - lens.offsetHeight) { y = img.height - lens.offsetHeight; }
-      if (y < 0) { y = 0; }
-      /* Set the position of the lens: */
-      lens.style.left = x + "px";
-      lens.style.top = y + "px";
       /* Display what the lens "sees": */
       result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
     }
     function getCursorPos(e) {
-      var a, x = 0, y = 0;
+      let a, x = 0, y = 0;
       e = e || window.event;
       /* Get the x and y positions of the image: */
       a = img.getBoundingClientRect();
       /* Calculate the cursor's x and y coordinates, relative to the image: */
       x = e.pageX - a.left - 20; // removed 20 pixels due to padding
       y = e.pageY - a.top - 20;
-      console.log(x, y)
       /* Consider any page scrolling: */
       x = x - window.pageXOffset;
       y = y - window.pageYOffset;
