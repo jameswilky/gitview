@@ -28,7 +28,7 @@ const traverseRepo = function (repo) {
     else if (item.type == "file") {
       //If item is a file but not a picture
       github.getFileIcon(fileType.toLowerCase()).then(data => {
-        ui.showSVG(data.svg)
+        ui.showSVG(data.svg, item.name)
       })
       //Display sprite of a txt file
     }
@@ -103,7 +103,9 @@ searchUser.addEventListener('keypress', (e) => {
           })
         }
         else {
+          console.log(e.target)
           ui.openOverlay(e.target)
+
 
         }
         return
@@ -136,3 +138,18 @@ searchUser.addEventListener('keypress', (e) => {
   //   ui.clearProfile();
   // }
 })
+
+
+//TODO
+/*
+
+Refactor and generalize code
+add similar functionality to text files that regular images have, link to source files
+
+fix back btn and clear
+
+add alerts
+
+fix remove file font when size is small
+
+*/

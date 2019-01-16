@@ -70,7 +70,6 @@ class UI {
       output += `
       <div class="item">
         ${img.outerHTML}
-        
       </div>
       `;
       //Output repos
@@ -85,23 +84,19 @@ class UI {
     if (value == 1) { size = 48 }
     if (value == 2) { size = 96 }
     if (value == 3) { size = 192 }
-    console.log(size)
-
-    let folders = document.querySelectorAll('.item.folder > img')
-    folders.forEach(folder => {
-      folder.style.width = size / 2 + 'px'
-      folder.style.height = size / 2 + 'px'
-    })
     this.gallery.style['grid-template-columns'] = `repeat(auto-fit, ${size}px)`;
     this.gallery.style['grid-auto-rows'] = `${size}px`;
   }
 
-  showSVG(svg) {
+  showSVG(svg, name) {
     let output = '';
 
     output += `
       <div class="item">
         ${svg}
+        <div>
+        ${name}
+        <div />
       </div>
       `;
     //Output repos
