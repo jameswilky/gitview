@@ -1,49 +1,63 @@
 class UI {
   constructor() {
+    this.folderIcon = "images/folder.png"
+
+
+    /*ToolBar*/
+    this.toolbar = document.querySelector('.toolbar')
+    this.folderToggle = document.querySelector('.toolbar__folderToggle');
+    this.fileToggle = document.querySelector('.toolbar__fileToggle')
+    this.backBtn = document.querySelector('.toolbar__back');
+    this.clearBtn = document.querySelector('.toolbar__clear')
+    this.slider = document.querySelector('.toolbar__slider');
+    this.slider.oninput = () => {
+      this.resizeItem(this.slider.value);
+    }
+
+    /*Zoom Lens*/
+    this.imageZoomResult = document.querySelector('.img-zoom-result')
+
+    /*Gallery*/
     this.gallery = document.querySelector('.gallery')
+    this.items;
+
+
+    /*Overlay*/
     this.overlay = document.querySelector('.overlay');
     this.overlayImage = this.overlay.querySelector('img');
     this.overlayTitle = this.overlay.querySelector('h4')
-
     this.overlayImage.addEventListener('mouseenter', e => {
       this.imageZoomResult.style.display = "initial"
-
     })
     this.overlayImage.addEventListener('mouseleave', e => {
       this.imageZoomResult.style.display = "none"
 
     })
     this.overlayClose = this.overlay.querySelector('.close');
-    this.folderToggleBtn = document.querySelector('.folderToggleBtn');
-    this.items;
-    this.backBtn = document.querySelector('.back');
 
-    this.imageZoomResult = document.querySelector('.img-zoom-result')
 
-    this.toolbar = document.querySelector('.toolbar')
 
-    this.slider = document.querySelector('.slider');
-    this.slider.oninput = () => {
-      this.resizeImage(this.slider.value);
-    }
+
+
   }
+
 
   showToolbar() {
     this.toolbar.style.display = "grid"
   }
-  toggleFolder() {
-    let folders = document.querySelectorAll('.folder')
-    let visible = folders[0].classList.contains('visible')
-    console.log(visible)
-    if (visible) {
-      this.folderToggleBtn.classList.add('__off')
+
+
+  toggleItem(target, button) {
+    let items = document.querySelectorAll(target)
+    let invisible = items[0].classList.contains('invisible')
+    if (invisible) {
+      this[button].classList.remove('fas--off')
     }
     else {
-      this.folderToggleBtn.classList.remove('__off')
+      this[button].classList.add('fas--off')
     }
-    folders.forEach(folder => {
-      folder.classList.toggle('visible')
-
+    items.forEach(item => {
+      item.classList.toggle('invisible')
     })
   }
 
@@ -66,20 +80,45 @@ class UI {
     let img = new Image();
     img.onload = () => {
       let output = '';
-
       output += `
-      <div class="item">
+      <div class="item gallery-image">
         ${img.outerHTML}
       </div>
       `;
       //Output repos
       this.gallery.innerHTML += output;
-      this.fitImage(this.gallery.lastElementChild)
+      this.fitItem(this.gallery.lastElementChild)
     }
     img.src = blob
     img.title = name;
   }
-  resizeImage(value) {
+
+  showIcon(image, name, url, className) {
+    if (image == "folder") {
+      image = this.createFolder()
+    }
+    let output = '';
+    output += `
+      <div class="item ${className}">
+        ${image}
+        <div>
+        ${name}
+        <div />
+        <input type="hidden" value=${url}>
+
+      </div>
+      `;
+    //Output repos
+    this.gallery.innerHTML += output;
+  }
+  createFolder() {
+    let img = document.createElement('img')
+    img.src = this.folderIcon
+    img.title = name
+    return img.outerHTML
+  }
+
+  resizeItem(value) {
     let size;
     if (value == 1) { size = 48 }
     if (value == 2) { size = 96 }
@@ -87,38 +126,7 @@ class UI {
     this.gallery.style['grid-template-columns'] = `repeat(auto-fit, ${size}px)`;
     this.gallery.style['grid-auto-rows'] = `${size}px`;
   }
-
-  showSVG(svg, name) {
-    let output = '';
-
-    output += `
-      <div class="item">
-        ${svg}
-        <div>
-        ${name}
-        <div />
-      </div>
-      `;
-    //Output repos
-    this.gallery.innerHTML += output;
-  }
-
-  createFolder(name, url) {
-    let output = ''
-    output +=
-      `
-      <div class="item folder visible">
-        <img src="images/folder.png" title=${name}>
-          <div>
-            ${name}
-            <div />
-            <input type="hidden" value=${url}>
-      </div>
-            `
-
-    this.gallery.innerHTML += output;
-  }
-  fitImage(item) {
+  fitItem(item) {
     const img = item.firstElementChild
     const h = img.naturalHeight
     const w = img.naturalWidth

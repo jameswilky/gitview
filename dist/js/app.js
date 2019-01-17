@@ -4,7 +4,7 @@ const github = new Github
 //Init UI
 const ui = new UI;
 
-let history;
+let history = [];
 
 // Search input
 const searchUser = document.getElementById('searchUser');
@@ -28,13 +28,13 @@ const traverseRepo = function (repo) {
     else if (item.type == "file") {
       //If item is a file but not a picture
       github.getFileIcon(fileType.toLowerCase()).then(data => {
-        ui.showSVG(data.svg, item.name)
+        ui.showIcon(data.svg, item.name, item.url, 'file')
       })
       //Display sprite of a txt file
     }
     else if (item.type == "dir") {
       //If item is a folder
-      ui.createFolder(item.name, item.url)
+      ui.showIcon("folder", item.name, item.url, 'folder')
     }
 
   });
@@ -68,20 +68,42 @@ searchUser.addEventListener('keypress', (e) => {
   document.addEventListener('click', e => {
 
     // Folder view Toggle
-    if (e.target == ui.folderToggleBtn) {
-      ui.toggleFolder();
+    if (e.target == ui.folderToggle) {
+      if (ui.gallery.children.length > 1) {
+        // If gallery is not empty
+        ui.toggleItem('.folder', 'folderToggle');
+      }
+      return
+    }
+
+    // File view Toggle
+    if (e.target == ui.fileToggle) {
+      if (ui.gallery.children.length > 1) {
+        // If gallery is not empty
+        ui.toggleItem('.file', 'fileToggle');
+      }
       return
     }
 
     // Go back to previous directory
     if (e.target == ui.backBtn) {
-      ui.clearGallery()
-      history.pop()
-      traverseRepo(history[history.length - 1]) //Pass Last element addition to history
+      if (history.length > 1) {
+        console.log(history.length)
+        ui.clearGallery()
+        history.pop()
+        traverseRepo(history[history.length - 1]) //Pass Last element addition to history
+      }
       return
     }
 
-    // Close ?
+    // Clear Gallery
+    if (e.target == ui.clearBtn) {
+      ui.clearGallery()
+      history = []
+      return
+    }
+
+    // Close overlay
     if (e.target == ui.overlayClose) {
       ui.closeOverlay()
       return

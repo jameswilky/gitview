@@ -15,7 +15,7 @@
   color: #d9534f;
 }
 
-.__off{
+.fas--off{
   color: #adb5bd
 }
 
@@ -26,7 +26,7 @@
 }
 
 /* The slider itself */
-.slider {
+.toolbar__slider {
   -webkit-appearance: none;  /* Override default CSS styles */
   appearance: none;
   width: 100%; /* Full-width */
@@ -39,12 +39,12 @@
 }
 
 /* Mouse-over effects */
-.slider:hover {
+.toolbar__slider:hover {
   opacity: 1; /* Fully shown on mouse-over */
 }
 
 /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.slider::-webkit-slider-thumb {
+.toolbar__slider::-webkit-slider-thumb {
   -webkit-appearance: none; /* Override default look */
   appearance: none;
   width: 15px; /* Set a specific slider handle width */
@@ -142,22 +142,13 @@
 }
 
 
-
-.item.folder{
-  visibility: 'hidden';
-  display:  none;
-
-
+.invisible {
+  visibility: hidden !important;
+  display:  none !important;
 }
 
-
-
-.item.folder.visible{
-  visibility: 'visible';
-  display: grid;
-
-}
 .item{
+  visibility: visible;
   overflow: hidden;
   display: grid;
   grid-template-columns: 1;
@@ -168,6 +159,7 @@
   cursor: pointer;
   object-fit: scale-down;
 }
+
 .item > div{
   /*Handle Text aligment and overflow*/
   white-space: nowrap;
