@@ -19,6 +19,10 @@ class UI {
 
     /*Gallery*/
     this.gallery = document.querySelector('.gallery')
+
+    this.fileInvisible = false
+    this.folderInvisible = false
+
     this.items;
 
 
@@ -34,11 +38,6 @@ class UI {
 
     })
     this.overlayClose = this.overlay.querySelector('.close');
-
-
-
-
-
   }
 
 
@@ -48,22 +47,36 @@ class UI {
 
 
   toggleItem(target, button) {
-    let items = document.querySelectorAll(target)
-    let invisible = items[0].classList.contains('invisible')
-    if (invisible) {
+
+    // Turn off generation of specified icon
+    if (this[`${target.replace('.', '')}Invisible`] == true) {
+      //If Invisible
       this[button].classList.remove('fas--off')
+      this[`${target.replace('.', '')}Invisible`] = false
     }
-    else {
+    else if (this[`${target.replace('.', '')}Invisible`] == false) {
+      //If Visible
       this[button].classList.add('fas--off')
+      this[`${target.replace('.', '')}Invisible`] = true
     }
-    items.forEach(item => {
-      item.classList.toggle('invisible')
-    })
+
+    //Clear Currently displayed specified icons
+    let items = document.querySelectorAll(target)
+    if (items) {
+      items.forEach(item => {
+        item.classList.toggle('invisible')
+        item.classList.toggle('visible')
+      })
+    }
+
+
+
+
   }
 
-  openOverlay(target) {
-    this.overlayImage.src = target.src;
-    this.overlayTitle.innerHTML = target.title;
+  openImage(image) {
+    this.overlayImage.src = image.src
+    this.overlayTitle.innerHTML = image.title;
     this.overlay.classList.add('open')
     this.imageZoomResult.style.display = "initial"
 
@@ -94,16 +107,20 @@ class UI {
   }
 
   showIcon(image, name, url, className) {
+    let visibility = 'visible'
     if (image == "folder") {
-      image = this.createFolder()
+      image = this.createFolder(name)
+    }
+    if (this[`${className}Invisible`]) {
+      visibility = 'invisible'
     }
     let output = '';
     output += `
-      <div class="item ${className}">
+      <div class="item ${className} ${visibility}">
         ${image}
         <div>
         ${name}
-        <div />
+        <div/>
         <input type="hidden" value=${url}>
 
       </div>
@@ -111,7 +128,7 @@ class UI {
     //Output repos
     this.gallery.innerHTML += output;
   }
-  createFolder() {
+  createFolder(name) {
     let img = document.createElement('img')
     img.src = this.folderIcon
     img.title = name

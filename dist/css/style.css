@@ -146,6 +146,10 @@
   visibility: hidden !important;
   display:  none !important;
 }
+.visible {
+  visibility: visible !important;
+  display:  grid !important;
+}
 
 .item{
   visibility: visible;

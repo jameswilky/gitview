@@ -28,7 +28,7 @@ const traverseRepo = function (repo) {
     else if (item.type == "file") {
       //If item is a file but not a picture
       github.getFileIcon(fileType.toLowerCase()).then(data => {
-        ui.showIcon(data.svg, item.name, item.url, 'file')
+        ui.showIcon(data.svg, item.name, item.html_url, 'file')
       })
       //Display sprite of a txt file
     }
@@ -65,79 +65,7 @@ searchUser.addEventListener('keypress', (e) => {
 
 
 
-  document.addEventListener('click', e => {
 
-    // Folder view Toggle
-    if (e.target == ui.folderToggle) {
-      if (ui.gallery.children.length > 1) {
-        // If gallery is not empty
-        ui.toggleItem('.folder', 'folderToggle');
-      }
-      return
-    }
-
-    // File view Toggle
-    if (e.target == ui.fileToggle) {
-      if (ui.gallery.children.length > 1) {
-        // If gallery is not empty
-        ui.toggleItem('.file', 'fileToggle');
-      }
-      return
-    }
-
-    // Go back to previous directory
-    if (e.target == ui.backBtn) {
-      if (history.length > 1) {
-        console.log(history.length)
-        ui.clearGallery()
-        history.pop()
-        traverseRepo(history[history.length - 1]) //Pass Last element addition to history
-      }
-      return
-    }
-
-    // Clear Gallery
-    if (e.target == ui.clearBtn) {
-      ui.clearGallery()
-      history = []
-      return
-    }
-
-    // Close overlay
-    if (e.target == ui.overlayClose) {
-      ui.closeOverlay()
-      return
-    }
-
-
-    // Check items too see if they were clicked
-    ui.items = document.querySelectorAll('.item > *')
-
-    ui.items.forEach(item => {
-      if (e.target == item) {
-        //Check if item is a folder
-        if (item.parentElement.classList.contains('folder')) {
-          let url = item.parentElement.querySelector('input').value
-          github.openDir(url).then(data => {
-            ui.clearGallery()
-            history.push(data.dir)
-            traverseRepo(data.dir)
-          })
-        }
-        else {
-          console.log(e.target)
-          ui.openOverlay(e.target)
-
-
-        }
-        return
-      }
-    })
-
-
-
-
-  })
 
   // if (userText !== '') {
   //   // Make http call
@@ -161,14 +89,75 @@ searchUser.addEventListener('keypress', (e) => {
   // }
 })
 
+document.addEventListener('click', e => {
+  // Folder view Toggle
+  if (e.target == ui.folderToggle) {
+    ui.toggleItem('.folder', 'folderToggle');
+    return
+  }
+
+  // File view Toggle
+  else if (e.target == ui.fileToggle) {
+    ui.toggleItem('.file', 'fileToggle');
+    return
+  }
+
+  // Go back to previous directory
+  if (e.target == ui.backBtn) {
+    if (history.length > 1) {
+      ui.clearGallery()
+      history.pop()
+      traverseRepo(history[history.length - 1]) //Pass Last element addition to history
+    }
+    return
+  }
+
+  // Clear Gallery
+  if (e.target == ui.clearBtn) {
+    ui.clearGallery()
+    history = []
+    return
+  }
+
+  // Close overlay
+  if (e.target == ui.overlayClose) {
+    ui.closeOverlay()
+    return
+  }
+
+
+  // Check items too see if they were clicked
+  ui.items = document.querySelectorAll('.item > *')
+
+  ui.items.forEach(item => {
+    if (e.target == item) {
+      //Check if item is a folder
+      if (item.parentElement.classList.contains('folder')) {
+        let url = item.parentElement.querySelector('input').value
+        github.openDir(url).then(data => {
+          ui.clearGallery()
+          history.push(data.dir)
+          traverseRepo(data.dir)
+        })
+      }
+      else if (item.parentElement.classList.contains('gallery-image')) {
+        ui.openImage(item)
+      }
+      else if (item.parentElement.classList.contains('file')) {
+        let url = item.querySelector('input').value
+        window.open(url)
+
+      }
+      return
+    }
+  })
+
+})
+
 
 //TODO
 /*
 
-Refactor and generalize code
-add similar functionality to text files that regular images have, link to source files
-
-fix back btn and clear
 
 add alerts
 
