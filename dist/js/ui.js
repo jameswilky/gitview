@@ -68,10 +68,6 @@ class UI {
         item.classList.toggle('visible')
       })
     }
-
-
-
-
   }
 
   openImage(image) {
@@ -137,9 +133,18 @@ class UI {
 
   resizeItem(value) {
     let size;
-    if (value == 1) { size = 48 }
-    if (value == 2) { size = 96 }
-    if (value == 3) { size = 192 }
+    if (value == 1) {
+      size = 48;
+      this.gallery.style['font-size'] = '0%';
+    }
+    if (value == 2) {
+      size = 96
+      this.gallery.style['font-size'] = '100%';
+    }
+    if (value == 3) {
+      size = 192
+      this.gallery.style['font-size'] = '100%';
+    }
     this.gallery.style['grid-template-columns'] = `repeat(auto-fit, ${size}px)`;
     this.gallery.style['grid-auto-rows'] = `${size}px`;
   }
