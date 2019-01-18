@@ -1,0 +1,23 @@
+{
+  "name": "gitView",
+  "version": "1.0.0",
+  "description": "This application is used to view image dense github repositories.",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "gh-pages id dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jameswilky/gitview.git"
+  },
+  "keywords": [],
+  "author": "James Wilkinson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jameswilky/gitview/issues"
+  },
+  "homepage": "https://jameswilky.github.io/gitview",
+  "dependencies": {
+    "gh-pages": "^2.0.1"
+  }
+}
