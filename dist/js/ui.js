@@ -175,12 +175,10 @@ class UI {
     //get search box
     const search = document.querySelector('.search');
 
-
     // Create div
     const div = document.createElement('div');
     div.className = className;
     div.appendChild(document.createTextNode(message)) //add text
-
 
     //insert alert
     container.insertBefore(div, search)
@@ -194,7 +192,6 @@ class UI {
   //Clear alert message
   clearAlert() {
     const currentAlert = document.querySelector('.alert')
-
     if (currentAlert) {
       currentAlert.remove();
     }
@@ -224,8 +221,9 @@ class UI {
     /* Execute a function when someone moves the cursor over the image, or the lens: */
     img.addEventListener("mousemove", moveLens);
     /* And also for touch screens: */
-    img.addEventListener("touchmove", moveLens);
+    // img.addEventListener("touchmove", moveLens);
     function moveLens(e) {
+
       let pos, x, y;
       /* Prevent any other actions that may occur when moving over the image */
       e.preventDefault();
@@ -234,6 +232,7 @@ class UI {
       /* Calculate the position of the lens: */
       x = pos.x - (lens.offsetWidth / 2);
       y = pos.y - (lens.offsetHeight / 2);
+
       /* Display what the lens "sees": */
       result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
     }
@@ -243,11 +242,11 @@ class UI {
       /* Get the x and y positions of the image: */
       a = img.getBoundingClientRect();
       /* Calculate the cursor's x and y coordinates, relative to the image: */
-      x = e.pageX - a.left - 20; // removed 20 pixels due to padding
-      y = e.pageY - a.top - 20;
+      x = e.pageX - a.left;
+      y = e.pageY - a.top;
       /* Consider any page scrolling: */
-      x = x - window.pageXOffset;
-      y = y - window.pageYOffset;
+      x = x - window.pageXOffset - 20; // removed 20 pixels due to padding
+      y = y - window.pageYOffset - 20;
       return { x: x, y: y };
     }
   }
@@ -255,8 +254,3 @@ class UI {
 
 }
 
-document.addEventListener('mousemove', e => {
-  let div = document.querySelector(".img-zoom-result")
-  div.style.left = e.pageX + 'px'
-  div.style.top = e.pageY + 'px'
-})

@@ -115,8 +115,8 @@
 .img-zoom-lens {
   position: absolute;
   /*set the size of the lens:*/
-  width: 40px;
-  height: 40px;
+  width: 0px;
+  height: 0px;
 }
 
 .img-zoom-result {
@@ -124,7 +124,7 @@
   /*set the size of the result div:*/
   width: 200px;
   height: 200px;
-  z-index: 2;
+  z-index: 3;
   display: none;
   border-radius: 100px;
 
@@ -191,6 +191,9 @@
 .item.h2{
   grid-row: span 2;
 }
+
+
+  
 
 
 

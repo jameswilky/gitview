@@ -10,13 +10,16 @@ let history = [];
 const searchUser = document.getElementById('searchUser');
 
 // Testing URL
-// https://github.com/Gethe/wow-ui-textures
 const traverseRepo = function (repo) {
   repo.forEach(item => {
-    let tokens = item.name.split('.')
-    let fileType = tokens.slice(-1)[0]
 
-    if (item.type == "file" && fileType == "PNG") { //use regex to get all case lower/upper types
+
+    //Identify if string ends in .png/.jpg/.tif/.gif
+    regex = /..*[.](png|jpg|tif|gif)$/i
+
+    let isImage = regex.test(item.name)
+
+    if (item.type == "file" && isImage) {
       //if file file is an image
       github.openImage(item).then(data => {
         if (data.image.type == "image/png") { //check if is an iamge
@@ -27,6 +30,9 @@ const traverseRepo = function (repo) {
     }
     else if (item.type == "file") {
       //If item is a file but not a picture
+      let tokens = item.name.split('.')
+      let fileType = tokens.slice(-1)[0]
+
       github.getFileIcon(fileType.toLowerCase()).then(data => {
         ui.showIcon(data.svg, item.name, item.html_url, 'file')
       })
@@ -46,10 +52,13 @@ searchUser.addEventListener('keypress', (e) => {
   if (key === 13) { // 13 is enter
     // Get input text
     let targetRepo = e.target.value;
-    targetRepo = "https://github.com/Gethe/wow-ui-textures"
+    // targetRepo = "https://github.com/Gethe/wow-ui-textures"
+
+    let regex = /^(https:\/\/github.com)\/.*\/.*/
+    //Checks for https:/github.com/*anything*/*anything*
 
     //Validate that format is correct
-    let valid = true //temp
+    let valid = regex.test(targetRepo)
 
     if (valid) {
       ui.showToolbar()
@@ -59,34 +68,16 @@ searchUser.addEventListener('keypress', (e) => {
         .then(data => {
           traverseRepo(data.repo)
           history.push(data.repo)
+        }).catch((e) => {
+          ui.showAlert('Repo not Found', 'alert alert-danger');
+
         })
+    }
+    else {
+      ui.showAlert('Invalid URL', 'alert alert-danger');
     }
   }
 
-
-
-
-
-  // if (userText !== '') {
-  //   // Make http call
-
-  //   github.getUser(userText)
-  //     .then(data => {
-  //       if (data.profile.message == 'Not Found') {
-  //         // Show alert
-  //         ui.showAlert('User not Found', 'alert alert-danger');
-
-  //       } else {
-  //         // Show profile
-  //         ui.showProfile(data.profile);
-  //         ui.showRepos(data.repos)
-  //       }
-  //     })
-  // }
-  // else {
-  //   //Clear profile
-  //   ui.clearProfile();
-  // }
 })
 
 document.addEventListener('click', e => {
@@ -155,12 +146,32 @@ document.addEventListener('click', e => {
 })
 
 
-//TODO
-/*
+// media query event handler
+if (matchMedia) {
+  const mq = window.matchMedia("(min-width: 500px)");
+  mq.addListener(WidthChange);
+  WidthChange(mq);
+}
 
+// media query change
+function WidthChange(mq) {
+  let div = document.querySelector(".img-zoom-result")
+  console.log(div)
+  if (mq.matches) {
+    // window width is at least 500px
+    console.log('large')
+    div.style.display = 'initial'
+  } else {
+    // window width is less than 500px
+    console.log('small')
+    div.style.display = 'none'
 
-add alerts
+  }
 
-fix remove file font when size is small
+}
 
-*/
+document.addEventListener('mousemove', e => {
+  let div = document.querySelector(".img-zoom-result")
+  div.style.left = e.pageX + 'px'
+  div.style.top = e.pageY + 'px'
+})
