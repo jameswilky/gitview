@@ -22,6 +22,8 @@ const traverseRepo = function (repo) {
     if (item.type == "file" && isImage) {
       //if file file is an image
       github.openImage(item).then(data => {
+        console.log('opening image')
+        console.log(data)
         if (data.image.type == "image/png") { //check if is an iamge
           imgURL = URL.createObjectURL(data.image)
           ui.showImage(imgURL, item.name)
@@ -61,17 +63,24 @@ searchUser.addEventListener('keypress', (e) => {
     let valid = regex.test(targetRepo)
 
     if (valid) {
-      ui.showToolbar()
-      ui.clearGallery()
-      history = []
-      github.getRepo(targetRepo)
-        .then(data => {
-          traverseRepo(data.repo)
-          history.push(data.repo)
-        }).catch((e) => {
-          ui.showAlert('Repo not Found', 'alert alert-danger');
 
+      github.getRepo(targetRepo, true) //Get Branch type, send true to confirm this is the intial search
+        .then(data => {
+          github.activeBranch = data.repo.default_branch //Set branch type
+
+          //Search repo
+          ui.showToolbar()
+          ui.clearGallery()
+          history = []
+          github.getRepo(targetRepo)
+            .then(data => {
+              traverseRepo(data.repo)
+              history.push(data.repo)
+            }).catch((e) => {
+              ui.showAlert('Repo not Found', 'alert alert-danger');
+            })
         })
+
     }
     else {
       ui.showAlert('Invalid URL', 'alert alert-danger');
@@ -129,6 +138,7 @@ document.addEventListener('click', e => {
           ui.clearGallery()
           history.push(data.dir)
           traverseRepo(data.dir)
+          console.log(data.dir)
         })
       }
       else if (item.parentElement.classList.contains('gallery-image')) {
@@ -156,14 +166,11 @@ if (matchMedia) {
 // media query change
 function WidthChange(mq) {
   let div = document.querySelector(".img-zoom-result")
-  console.log(div)
   if (mq.matches) {
     // window width is at least 500px
-    console.log('large')
     div.style.display = 'initial'
   } else {
     // window width is less than 500px
-    console.log('small')
     div.style.display = 'none'
 
   }
