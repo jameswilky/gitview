@@ -4,7 +4,7 @@
   "description": "This application is used to view image dense github repositories.",
   "main": "index.js",
   "scripts": {
-    "deploy": "gh-pages id dist"
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
