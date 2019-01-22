@@ -11,6 +11,7 @@
   color:#4582EC;
   font-size: 200%;
 }
+
 .fas:hover{
   color: #d9534f;
 }
@@ -110,13 +111,19 @@
   border-radius: 4%;
 
 }
+.overlay-inner > svg{
+  height: 200px;
+  width: 200px;
+}
+
+
 
 /* The box around the cursor*/
 .img-zoom-lens {
   position: absolute;
   /*set the size of the lens:*/
-  width: 0px;
-  height: 0px;
+  width: 40px;
+  height: 40px;
 }
 
 .img-zoom-result {
@@ -190,6 +197,14 @@
 }
 .item.h2{
   grid-row: span 2;
+}
+
+.fab{
+  font-size: 200%;
+  color:black;
+}
+.fab:hover{
+  color: #4582EC;
 }
 
 

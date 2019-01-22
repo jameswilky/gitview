@@ -22,22 +22,17 @@ class UI {
 
     this.fileInvisible = false
     this.folderInvisible = false
-
     this.items;
 
 
     /*Overlay*/
     this.overlay = document.querySelector('.overlay');
-    this.overlayImage = this.overlay.querySelector('img');
+    this.overlayInner = document.querySelector('.overlay-inner')
     this.overlayTitle = this.overlay.querySelector('h4')
-    this.overlayImage.addEventListener('mouseenter', e => {
-      this.imageZoomResult.style.display = "initial"
-    })
-    this.overlayImage.addEventListener('mouseleave', e => {
-      this.imageZoomResult.style.display = "none"
 
-    })
     this.overlayClose = this.overlay.querySelector('.close');
+
+
   }
 
 
@@ -76,18 +71,67 @@ class UI {
     this.overlay.classList.add('open')
     this.imageZoomResult.style.display = "initial"
 
-    this.imageZoom("myimage")
+    this.imageZoom("overlay__image")
+  }
+
+  openOverlay(item) {
+    let img
+    let svg
+
+    if (item.firstElementChild.nodeName == 'svg') { //if item is an svg file
+      svg = item.firstElementChild.cloneNode(true)
+      svg.setAttribute('id', 'overlay__image')
+      this.overlayInner.appendChild(svg)
+      console.log(item)
+      this.overlayTitle.innerHTML = item.lastElementChild.innerText
+
+    }
+    else if (item.firstElementChild.nodeName == 'IMG') { //If item is a different image file
+      img = document.createElement('img')
+      img.setAttribute('id', 'overlay__image')
+      img.src = item.firstElementChild.src
+      this.overlayInner.appendChild(img)
+      this.overlayTitle.innerHTML = item.firstElementChild.title;
+
+
+
+    }
+    this.overlayImage = this.overlayInner.lastChild
+    this.overlayImageEnter = this.overlayImage.addEventListener('mouseenter', e => {
+      this.imageZoomResult.style.display = "initial"
+    })
+    this.overlayImageLeave = this.overlayImage.addEventListener('mouseleave', e => {
+      this.imageZoomResult.style.display = "none"
+
+    })
+    this.imageZoomResult.style.display = "initial"
+    this.imageZoom("overlay__image")
+    this.overlay.classList.add('open')
   }
 
   closeOverlay() {
-    this.imageZoomResult.style.display = "none"
-    this.overlay.classList.remove('open');
+    try {
+      this.overlayImage.removeEventListener('mouseenter', this.overlayImageEnter)
+      this.overlayImage.removeEventListener('mouseleave', this.overlayImageLeave)
+    }
+    finally {
+      let img = document.getElementById('overlay__image')
+      img.parentNode.removeChild(img)
+
+      this.imageZoomResult.style.display = "none"
+      this.overlay.classList.remove('open');
+    }
   }
 
   showImage(blob, name) {
     // blob is an image object
     let img = new Image();
+
+
     img.onload = () => {
+      // if (svg) {
+      //   URL.revokeObjectURL(blob), { once: true }
+      // }
       let output = '';
       output += `
       <div class="item gallery-image">
@@ -100,6 +144,23 @@ class UI {
     }
     img.src = blob
     img.title = name;
+  }
+
+  showSVG(image, name) {
+    let output = ''
+    output += `
+      <div class="item gallery-image">
+        ${image}
+        <div>
+        ${name}
+        <div/>
+        <input type="hidden">
+
+      </div>
+      `;
+    //Output repos
+    this.gallery.innerHTML += output;
+    this.gallery.lastChild.firstChild.title = name
   }
 
   showIcon(image, name, url, className) {
@@ -221,7 +282,6 @@ class UI {
     /* Execute a function when someone moves the cursor over the image, or the lens: */
     img.addEventListener("mousemove", moveLens);
     /* And also for touch screens: */
-    // img.addEventListener("touchmove", moveLens);
     function moveLens(e) {
 
       let pos, x, y;

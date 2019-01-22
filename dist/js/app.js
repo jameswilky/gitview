@@ -15,19 +15,25 @@ const traverseRepo = function (repo) {
 
 
     //Identify if string ends in .png/.jpg/.tif/.gif
-    regex = /..*[.](png|jpg|tif|gif)$/i
+    isImage = /..*[.](png|jpg|tif|gif)$/i
+    isSVG = /..*[.](svg)$/i
 
-    let isImage = regex.test(item.name)
-
-    if (item.type == "file" && isImage) {
+    if (item.type == "file" && isImage.test(item.name)) { //File is png file
       //if file file is an image
       github.openImage(item).then(data => {
-        console.log('opening image')
-        console.log(data)
-        if (data.image.type == "image/png") { //check if is an iamge
-          imgURL = URL.createObjectURL(data.image)
-          ui.showImage(imgURL, item.name)
-        }
+        // if (data.image.type == "image/png") {
+        //   imgURL = URL.createObjectURL(data.image)
+        //   ui.showImage(imgURL, item.name)
+        // }
+        imgURL = URL.createObjectURL(data.image)
+        ui.showImage(imgURL, item.name)
+      })
+    }
+    else if (item.type == 'file' && isSVG.test(item.name)) {
+      github.openSVG(item).then(data => {
+        ui.showSVG(data.image, item.name)
+
+
       })
     }
     else if (item.type == "file") {
@@ -37,6 +43,7 @@ const traverseRepo = function (repo) {
 
       github.getFileIcon(fileType.toLowerCase()).then(data => {
         ui.showIcon(data.svg, item.name, item.html_url, 'file')
+
       })
       //Display sprite of a txt file
     }
@@ -47,6 +54,8 @@ const traverseRepo = function (repo) {
 
   });
 }
+
+
 
 // Search input event listener
 searchUser.addEventListener('keypress', (e) => {
@@ -61,7 +70,7 @@ searchUser.addEventListener('keypress', (e) => {
 
     //Validate that format is correct
     let valid = regex.test(targetRepo)
-
+    valid = true
     if (valid) {
 
       github.getRepo(targetRepo, true) //Get Branch type, send true to confirm this is the intial search
@@ -138,11 +147,11 @@ document.addEventListener('click', e => {
           ui.clearGallery()
           history.push(data.dir)
           traverseRepo(data.dir)
-          console.log(data.dir)
         })
       }
       else if (item.parentElement.classList.contains('gallery-image')) {
-        ui.openImage(item)
+        // ui.openImage(item)
+        ui.openOverlay(item.parentElement)
       }
       else if (item.parentElement.classList.contains('file')) {
         let url = item.querySelector('input').value
