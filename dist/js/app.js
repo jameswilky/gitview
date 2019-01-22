@@ -12,8 +12,6 @@ const searchUser = document.getElementById('searchUser');
 // Testing URL
 const traverseRepo = function (repo) {
   repo.forEach(item => {
-
-
     //Identify if string ends in .png/.jpg/.tif/.gif
     isImage = /..*[.](png|jpg|tif|gif)$/i
     isSVG = /..*[.](svg)$/i
@@ -21,10 +19,6 @@ const traverseRepo = function (repo) {
     if (item.type == "file" && isImage.test(item.name)) { //File is png file
       //if file file is an image
       github.openImage(item).then(data => {
-        // if (data.image.type == "image/png") {
-        //   imgURL = URL.createObjectURL(data.image)
-        //   ui.showImage(imgURL, item.name)
-        // }
         imgURL = URL.createObjectURL(data.image)
         ui.showImage(imgURL, item.name)
       })
@@ -63,14 +57,12 @@ searchUser.addEventListener('keypress', (e) => {
   if (key === 13) { // 13 is enter
     // Get input text
     let targetRepo = e.target.value;
-    // targetRepo = "https://github.com/Gethe/wow-ui-textures"
 
     let regex = /^(https:\/\/github.com)\/.*\/.*/
     //Checks for https:/github.com/*anything*/*anything*
 
     //Validate that format is correct
     let valid = regex.test(targetRepo)
-    valid = true
     if (valid) {
 
       github.getRepo(targetRepo, true) //Get Branch type, send true to confirm this is the intial search
@@ -106,7 +98,7 @@ document.addEventListener('click', e => {
   }
 
   // File view Toggle
-  else if (e.target == ui.fileToggle) {
+  if (e.target == ui.fileToggle) {
     ui.toggleItem('.file', 'fileToggle');
     return
   }
@@ -128,11 +120,13 @@ document.addEventListener('click', e => {
     return
   }
 
-  // Close overlay
-  if (e.target == ui.overlayClose) {
+  // Close overlay when close button is clicked or clicking outside image
+  if ((e.target == ui.overlayClose) || e.target.classList.contains('open')) {
     ui.closeOverlay()
     return
   }
+
+
 
 
   // Check items too see if they were clicked
@@ -162,32 +156,4 @@ document.addEventListener('click', e => {
     }
   })
 
-})
-
-
-// media query event handler
-if (matchMedia) {
-  const mq = window.matchMedia("(min-width: 500px)");
-  mq.addListener(WidthChange);
-  WidthChange(mq);
-}
-
-// media query change
-function WidthChange(mq) {
-  let div = document.querySelector(".img-zoom-result")
-  if (mq.matches) {
-    // window width is at least 500px
-    div.style.display = 'initial'
-  } else {
-    // window width is less than 500px
-    div.style.display = 'none'
-
-  }
-
-}
-
-document.addEventListener('mousemove', e => {
-  let div = document.querySelector(".img-zoom-result")
-  div.style.left = e.pageX + 'px'
-  div.style.top = e.pageY + 'px'
 })
