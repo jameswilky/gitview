@@ -91,6 +91,7 @@ searchUser.addEventListener('keypress', (e) => {
 })
 
 document.addEventListener('click', e => {
+  console.log(e)
   // Folder view Toggle
   if (e.target == ui.folderToggle) {
     ui.toggleItem('.folder', 'folderToggle');
@@ -133,7 +134,9 @@ document.addEventListener('click', e => {
   ui.items = document.querySelectorAll('.item > *')
 
   ui.items.forEach(item => {
-    if (e.target == item) {
+
+    if (item.contains(e.target)) {
+
       //Check if item is a folder
       if (item.parentElement.classList.contains('folder')) {
         let url = item.parentElement.querySelector('input').value
