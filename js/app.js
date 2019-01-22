@@ -12,22 +12,22 @@ const searchUser = document.getElementById('searchUser');
 // Testing URL
 const traverseRepo = function (repo) {
   repo.forEach(item => {
-
-
     //Identify if string ends in .png/.jpg/.tif/.gif
-    regex = /..*[.](png|jpg|tif|gif)$/i
+    isImage = /..*[.](png|jpg|tif|gif)$/i
+    isSVG = /..*[.](svg)$/i
 
-    let isImage = regex.test(item.name)
-
-    if (item.type == "file" && isImage) {
+    if (item.type == "file" && isImage.test(item.name)) { //File is png file
       //if file file is an image
       github.openImage(item).then(data => {
-        console.log('opening image')
-        console.log(data)
-        if (data.image.type == "image/png") { //check if is an iamge
-          imgURL = URL.createObjectURL(data.image)
-          ui.showImage(imgURL, item.name)
-        }
+        imgURL = URL.createObjectURL(data.image)
+        ui.showImage(imgURL, item.name)
+      })
+    }
+    else if (item.type == 'file' && isSVG.test(item.name)) {
+      github.openSVG(item).then(data => {
+        ui.showSVG(data.image, item.name)
+
+
       })
     }
     else if (item.type == "file") {
@@ -37,6 +37,7 @@ const traverseRepo = function (repo) {
 
       github.getFileIcon(fileType.toLowerCase()).then(data => {
         ui.showIcon(data.svg, item.name, item.html_url, 'file')
+
       })
       //Display sprite of a txt file
     }
@@ -48,20 +49,20 @@ const traverseRepo = function (repo) {
   });
 }
 
+
+
 // Search input event listener
 searchUser.addEventListener('keypress', (e) => {
   const key = e.which || e.keyCode;
   if (key === 13) { // 13 is enter
     // Get input text
     let targetRepo = e.target.value;
-    // targetRepo = "https://github.com/Gethe/wow-ui-textures"
 
     let regex = /^(https:\/\/github.com)\/.*\/.*/
     //Checks for https:/github.com/*anything*/*anything*
 
     //Validate that format is correct
     let valid = regex.test(targetRepo)
-
     if (valid) {
 
       github.getRepo(targetRepo, true) //Get Branch type, send true to confirm this is the intial search
@@ -90,6 +91,7 @@ searchUser.addEventListener('keypress', (e) => {
 })
 
 document.addEventListener('click', e => {
+  console.log(e)
   // Folder view Toggle
   if (e.target == ui.folderToggle) {
     ui.toggleItem('.folder', 'folderToggle');
@@ -97,7 +99,7 @@ document.addEventListener('click', e => {
   }
 
   // File view Toggle
-  else if (e.target == ui.fileToggle) {
+  if (e.target == ui.fileToggle) {
     ui.toggleItem('.file', 'fileToggle');
     return
   }
@@ -119,18 +121,22 @@ document.addEventListener('click', e => {
     return
   }
 
-  // Close overlay
-  if (e.target == ui.overlayClose) {
+  // Close overlay when close button is clicked or clicking outside image
+  if ((e.target == ui.overlayClose) || e.target.classList.contains('open')) {
     ui.closeOverlay()
     return
   }
+
+
 
 
   // Check items too see if they were clicked
   ui.items = document.querySelectorAll('.item > *')
 
   ui.items.forEach(item => {
-    if (e.target == item) {
+
+    if (item.contains(e.target)) {
+
       //Check if item is a folder
       if (item.parentElement.classList.contains('folder')) {
         let url = item.parentElement.querySelector('input').value
@@ -138,11 +144,11 @@ document.addEventListener('click', e => {
           ui.clearGallery()
           history.push(data.dir)
           traverseRepo(data.dir)
-          console.log(data.dir)
         })
       }
       else if (item.parentElement.classList.contains('gallery-image')) {
-        ui.openImage(item)
+        // ui.openImage(item)
+        ui.openOverlay(item.parentElement)
       }
       else if (item.parentElement.classList.contains('file')) {
         let url = item.querySelector('input').value
@@ -156,29 +162,8 @@ document.addEventListener('click', e => {
 })
 
 
-// media query event handler
-if (matchMedia) {
-  const mq = window.matchMedia("(min-width: 500px)");
-  mq.addListener(WidthChange);
-  WidthChange(mq);
-}
+// To Do
 
-// media query change
-function WidthChange(mq) {
-  let div = document.querySelector(".img-zoom-result")
-  if (mq.matches) {
-    // window width is at least 500px
-    div.style.display = 'initial'
-  } else {
-    // window width is less than 500px
-    div.style.display = 'none'
+// Limit number of items on page - use generator/iterators
 
-  }
-
-}
-
-document.addEventListener('mousemove', e => {
-  let div = document.querySelector(".img-zoom-result")
-  div.style.left = e.pageX + 'px'
-  div.style.top = e.pageY + 'px'
-})
+// scope the SVG classes and Ids - use symbols and generators

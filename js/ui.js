@@ -14,30 +14,23 @@ class UI {
       this.resizeItem(this.slider.value);
     }
 
-    /*Zoom Lens*/
-    this.imageZoomResult = document.querySelector('.img-zoom-result')
 
     /*Gallery*/
     this.gallery = document.querySelector('.gallery')
 
     this.fileInvisible = false
     this.folderInvisible = false
-
     this.items;
 
 
     /*Overlay*/
     this.overlay = document.querySelector('.overlay');
-    this.overlayImage = this.overlay.querySelector('img');
+    this.overlayInner = document.querySelector('.overlay-inner')
     this.overlayTitle = this.overlay.querySelector('h4')
-    this.overlayImage.addEventListener('mouseenter', e => {
-      this.imageZoomResult.style.display = "initial"
-    })
-    this.overlayImage.addEventListener('mouseleave', e => {
-      this.imageZoomResult.style.display = "none"
 
-    })
     this.overlayClose = this.overlay.querySelector('.close');
+
+
   }
 
 
@@ -76,17 +69,45 @@ class UI {
     this.overlay.classList.add('open')
     this.imageZoomResult.style.display = "initial"
 
-    this.imageZoom("myimage")
+    this.imageZoom("overlay__image")
+  }
+
+  openOverlay(item) {
+    let img
+    let svg
+
+    if (item.firstElementChild.nodeName == 'svg') { //if item is an svg file
+      svg = item.firstElementChild.cloneNode(true)
+      svg.setAttribute('id', 'overlay__image')
+      this.overlayInner.appendChild(svg)
+      this.overlayTitle.innerHTML = item.lastElementChild.innerText
+
+    }
+    else if (item.firstElementChild.nodeName == 'IMG') { //If item is a different image file
+      img = document.createElement('img')
+      img.setAttribute('id', 'overlay__image')
+      img.src = item.firstElementChild.src
+      this.overlayInner.appendChild(img)
+      this.overlayTitle.innerHTML = item.firstElementChild.title;
+    }
+
+    this.overlay.classList.add('open')
   }
 
   closeOverlay() {
-    this.imageZoomResult.style.display = "none"
+
+    let img = document.getElementById('overlay__image')
+    img.parentNode.removeChild(img)
+
     this.overlay.classList.remove('open');
+
   }
 
   showImage(blob, name) {
     // blob is an image object
     let img = new Image();
+
+
     img.onload = () => {
       let output = '';
       output += `
@@ -100,6 +121,23 @@ class UI {
     }
     img.src = blob
     img.title = name;
+  }
+
+  showSVG(image, name) {
+    let output = ''
+    output += `
+      <div class="item gallery-image">
+        ${image}
+        <div>
+        ${name}
+        <div/>
+        <input type="hidden">
+
+      </div>
+      `;
+    //Output repos
+    this.gallery.innerHTML += output;
+    this.gallery.lastChild.firstChild.title = name
   }
 
   showIcon(image, name, url, className) {
@@ -202,55 +240,5 @@ class UI {
   clearGallery() {
     this.gallery.innerHTML = ''
   }
-
-  imageZoom(imgID) {
-    var img, lens, result, cx, cy;
-    img = document.getElementById(imgID);
-    result = this.imageZoomResult
-    /* Create lens: */
-    lens = document.createElement("DIV");
-    lens.setAttribute("class", "img-zoom-lens");
-    /* Insert lens: */
-    img.parentElement.insertBefore(lens, img);
-    /* Calculate the ratio between result DIV and lens: */
-    cx = result.offsetWidth / lens.offsetWidth;
-    cy = result.offsetHeight / lens.offsetHeight;
-    /* Set background properties for the result DIV */
-    result.style.backgroundImage = "url('" + img.src + "')";
-    result.style.backgroundSize = (img.width * cx) + "px " + (img.height * cy) + "px";
-    /* Execute a function when someone moves the cursor over the image, or the lens: */
-    img.addEventListener("mousemove", moveLens);
-    /* And also for touch screens: */
-    // img.addEventListener("touchmove", moveLens);
-    function moveLens(e) {
-
-      let pos, x, y;
-      /* Prevent any other actions that may occur when moving over the image */
-      e.preventDefault();
-      /* Get the cursor's x and y positions: */
-      pos = getCursorPos(e);
-      /* Calculate the position of the lens: */
-      x = pos.x - (lens.offsetWidth / 2);
-      y = pos.y - (lens.offsetHeight / 2);
-
-      /* Display what the lens "sees": */
-      result.style.backgroundPosition = "-" + (x * cx) + "px -" + (y * cy) + "px";
-    }
-    function getCursorPos(e) {
-      let a, x = 0, y = 0;
-      e = e || window.event;
-      /* Get the x and y positions of the image: */
-      a = img.getBoundingClientRect();
-      /* Calculate the cursor's x and y coordinates, relative to the image: */
-      x = e.pageX - a.left;
-      y = e.pageY - a.top;
-      /* Consider any page scrolling: */
-      x = x - window.pageXOffset - 20; // removed 20 pixels due to padding
-      y = y - window.pageYOffset - 20;
-      return { x: x, y: y };
-    }
-  }
-
-
 }
 
