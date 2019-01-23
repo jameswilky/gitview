@@ -78,6 +78,7 @@ class Github {
       response = await fetch(this.blankFileUrl)
       svg = await response.text();
     }
+
     return {
       svg
     }

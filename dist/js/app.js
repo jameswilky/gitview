@@ -36,8 +36,16 @@ const traverseRepo = function (repo) {
       let fileType = tokens.slice(-1)[0]
 
       github.getFileIcon(fileType.toLowerCase()).then(data => {
-        ui.showIcon(data.svg, item.name, item.html_url, 'file')
+        // console.log(data.svg, data.svgElem)
+        // ui.showIcon(data.svg, item.name, item.html_url, 'file')
 
+        const blob = new Blob([data.svg], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const image = document.createElement('img');
+        image.addEventListener('load', () => URL.revokeObjectURL(url), { once: true });
+        image.src = url;
+        let node = document.querySelector('.gallery')
+        node.appendChild(image)
       })
       //Display sprite of a txt file
     }
@@ -48,8 +56,6 @@ const traverseRepo = function (repo) {
 
   });
 }
-
-
 
 // Search input event listener
 searchUser.addEventListener('keypress', (e) => {
@@ -91,7 +97,6 @@ searchUser.addEventListener('keypress', (e) => {
 })
 
 document.addEventListener('click', e => {
-  console.log(e)
   // Folder view Toggle
   if (e.target == ui.folderToggle) {
     ui.toggleItem('.folder', 'folderToggle');
@@ -160,3 +165,9 @@ document.addEventListener('click', e => {
   })
 
 })
+
+
+// To Do
+
+// Limit number of items on page - use generator/iterators
+// scope the SVG classes and Ids - use symbols and generators

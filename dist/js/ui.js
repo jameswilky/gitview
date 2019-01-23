@@ -141,6 +141,8 @@ class UI {
   }
 
   showIcon(image, name, url, className) {
+    //temp
+    // console.log(image.children[0].sheet.cssRules)
     let visibility = 'visible'
     if (image == "folder") {
       image = this.createFolder(name)
@@ -161,6 +163,23 @@ class UI {
       `;
     //Output repos
     this.gallery.innerHTML += output;
+    // console.log(this.gallery.lastChild)
+
+    // var svgString = new XMLSerializer().serializeToString(this.gallery.lastChild.firstElementChild);
+
+    // var canvas = document.getElementById("canvas");
+    // var ctx = canvas.getContext("2d");
+    // var DOMURL = self.URL || self.webkitURL || self;
+    // var img = new Image();
+    // var svg = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+    // var url = DOMURL.createObjectURL(svg);
+    // img.onload = function () {
+    //   ctx.drawImage(img, 0, 0);
+    //   var png = canvas.toDataURL("image/png");
+    //   document.querySelector('#png-container').innerHTML = '<img src="' + png + '"/>';
+    //   DOMURL.revokeObjectURL(png);
+    // };
+    // img.src = url;
   }
   createFolder(name) {
     let img = document.createElement('img')
@@ -240,8 +259,5 @@ class UI {
   clearGallery() {
     this.gallery.innerHTML = ''
   }
-
-
-
 }
 
