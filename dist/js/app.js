@@ -20,14 +20,12 @@ const traverseRepo = function (repo) {
       //if file file is an image
       github.openImage(item).then(data => {
         imgURL = URL.createObjectURL(data.image)
-        ui.showImage(imgURL, item.name)
+        ui.showImage(imgURL, item.name, ['gallery-image'], 'png')
       })
     }
     else if (item.type == 'file' && isSVG.test(item.name)) {
       github.openSVG(item).then(data => {
-        ui.showSVG(data.image, item.name)
-
-
+        ui.showImage(data.svg, item.name, ['gallery-image'], 'svg')
       })
     }
     else if (item.type == "file") {
@@ -36,22 +34,15 @@ const traverseRepo = function (repo) {
       let fileType = tokens.slice(-1)[0]
 
       github.getFileIcon(fileType.toLowerCase()).then(data => {
-        // console.log(data.svg, data.svgElem)
-        // ui.showIcon(data.svg, item.name, item.html_url, 'file')
+        ui.showImage(data.svg, item.name, ['file'], 'svg')
 
-        const blob = new Blob([data.svg], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
-        const image = document.createElement('img');
-        image.addEventListener('load', () => URL.revokeObjectURL(url), { once: true });
-        image.src = url;
-        let node = document.querySelector('.gallery')
-        node.appendChild(image)
       })
-      //Display sprite of a txt file
     }
     else if (item.type == "dir") {
+      ui.showImage(ui.folderIcon, item.name, ['folder'], 'png')
+
       //If item is a folder
-      ui.showIcon("folder", item.name, item.url, 'folder')
+      // ui.showIcon("folder", item.name, item.url, 'folder')
     }
 
   });

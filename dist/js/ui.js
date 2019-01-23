@@ -103,25 +103,55 @@ class UI {
 
   }
 
-  showImage(blob, name) {
-    // blob is an image object
-    let img = new Image();
 
+  showImage(blob, name, classNames, fileType) {
+    let image = document.createElement('img');
 
-    img.onload = () => {
-      let output = '';
-      output += `
-      <div class="item gallery-image">
-        ${img.outerHTML}
-      </div>
-      `;
-      //Output repos
-      this.gallery.innerHTML += output;
-      this.fitItem(this.gallery.lastElementChild)
+    if (fileType == 'svg') {
+      this.svgToPng(blob, image) //svg to png
+
     }
-    img.src = blob
-    img.title = name;
+    else if (fileType == 'png') {
+      image.src = blob
+
+    }
+    image.title = name
+
+    let item = document.createElement('div')
+    item.setAttribute('class', 'item')
+    classNames.forEach(className => {
+      item.classList.add(className)
+    })
+
+    item.appendChild(image)
+    let title = document.createElement('div')
+    title.innerHTML = name
+
+    item.appendChild(title)
+
+
+    this.gallery.appendChild(item)
   }
+  // showImage(blob, name) {
+
+  //   // blob is an image object
+  //   let img = new Image();
+
+
+  //   img.onload = () => {
+  //     let output = '';
+  //     output += `
+  //     <div class="item gallery-image">
+  //       ${img.outerHTML}
+  //     </div>
+  //     `;
+  //     //Output repos
+  //     this.gallery.innerHTML += output;
+  //     this.fitItem(this.gallery.lastElementChild)
+  //   }
+  //   img.src = blob
+  //   img.title = name;
+  // }
 
   showSVG(image, name) {
     let output = ''
@@ -138,6 +168,13 @@ class UI {
     //Output repos
     this.gallery.innerHTML += output;
     this.gallery.lastChild.firstChild.title = name
+  }
+
+  svgToPng(svg, targetImage) {
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    targetImage.addEventListener('load', () => URL.revokeObjectURL(url), { once: true });
+    targetImage.src = url;
   }
 
   showIcon(image, name, url, className) {
