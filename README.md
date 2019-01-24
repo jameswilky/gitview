@@ -1,11 +1,11 @@
 # Gitview
 
-This application is used to view image dense github repositories.
+This application is used to view png/svg/jpg/gif dense github repositories without having to individually open each file or download the entire repo.
 
 url: https://jameswilky.github.io/gitview
 
 
-Below are a few sample repositories to test with the application:
+Below are a few sample repositories to test with the application, just copy and paste the urls into gitview:
 
 
 - https://github.com/Gethe/wow-ui-textures
