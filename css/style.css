@@ -63,10 +63,7 @@
   grid-auto-flow: dense;
   grid-gap: 10px;
   padding-top: 20px;
-
-  justify-content: center;
 }
-
 
 
 .overlay {
@@ -96,6 +93,8 @@
   display: grid;
   justify-items: center;
   align-items: center;
+  
+  overflow: hidden;
 }
 
 .overlay-inner > h4{
@@ -108,14 +107,13 @@
   max-width: 70vw;
   max-height: 80vh;
   padding:20px;
-  justify-self: center;
   border-radius: 4%;
 
 }
-.overlay-inner > svg{
+/* .overlay-inner > svg{
   height: 200px;
   width: 200px;
-}
+} */
 
 
 
@@ -184,7 +182,7 @@
   align-self: center;
 }
 
-.item:not(.folder) > img {
+.gallery__image > img {
   /*Handle Main Gallery Images*/
   grid-column: 1 / -1;
   grid-row: 1 / -1;
@@ -209,7 +207,6 @@
 }
 
 
-  
 
 
 

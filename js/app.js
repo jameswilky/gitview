@@ -4,6 +4,9 @@ const github = new Github
 //Init UI
 const ui = new UI;
 
+//init image parser
+// const imageParser = new ImageParser
+
 let history = [];
 
 // Search input
@@ -13,43 +16,40 @@ const searchUser = document.getElementById('searchUser');
 const traverseRepo = function (repo) {
   repo.forEach(item => {
     //Identify if string ends in .png/.jpg/.tif/.gif
-    isImage = /..*[.](png|jpg|tif|gif)$/i
+    isImage = /..*[.](png|jpg|tiff|gif)$/i
     isSVG = /..*[.](svg)$/i
 
     if (item.type == "file" && isImage.test(item.name)) { //File is png file
       //if file file is an image
       github.openImage(item).then(data => {
         imgURL = URL.createObjectURL(data.image)
-        ui.showImage(imgURL, item.name)
+        ui.parseImage(imgURL, item.name, 'gallery__image', 'png')
       })
     }
     else if (item.type == 'file' && isSVG.test(item.name)) {
+      console.log(`Parsing ${item.name} as an image icon`)
+
       github.openSVG(item).then(data => {
-        ui.showSVG(data.image, item.name)
-
-
+        ui.parseImage(data.svg, item.name, 'gallery__image', 'svg')
       })
     }
     else if (item.type == "file") {
       //If item is a file but not a picture
       let tokens = item.name.split('.')
       let fileType = tokens.slice(-1)[0]
-
       github.getFileIcon(fileType.toLowerCase()).then(data => {
-        ui.showIcon(data.svg, item.name, item.html_url, 'file')
-
+        ui.parseImage(data.svg, item.name, 'gallery__file', 'svg', item.html_url)
       })
-      //Display sprite of a txt file
     }
     else if (item.type == "dir") {
+      ui.parseImage(ui.folderIcon, item.name, 'gallery__folder', 'png', item.url)
+
       //If item is a folder
-      ui.showIcon("folder", item.name, item.url, 'folder')
+      // ui.showIcon("folder", item.name, item.url, 'gallery__folder')
     }
 
   });
 }
-
-
 
 // Search input event listener
 searchUser.addEventListener('keypress', (e) => {
@@ -91,16 +91,15 @@ searchUser.addEventListener('keypress', (e) => {
 })
 
 document.addEventListener('click', e => {
-  console.log(e)
   // Folder view Toggle
   if (e.target == ui.folderToggle) {
-    ui.toggleItem('.folder', 'folderToggle');
+    ui.toggleItem('.gallery__folder', 'folderToggle');
     return
   }
 
   // File view Toggle
   if (e.target == ui.fileToggle) {
-    ui.toggleItem('.file', 'fileToggle');
+    ui.toggleItem('.gallery__file', 'fileToggle');
     return
   }
 
@@ -127,9 +126,6 @@ document.addEventListener('click', e => {
     return
   }
 
-
-
-
   // Check items too see if they were clicked
   ui.items = document.querySelectorAll('.item > *')
 
@@ -138,7 +134,7 @@ document.addEventListener('click', e => {
     if (item.contains(e.target)) {
 
       //Check if item is a folder
-      if (item.parentElement.classList.contains('folder')) {
+      if (item.parentElement.classList.contains('gallery__folder')) {
         let url = item.parentElement.querySelector('input').value
         github.openDir(url).then(data => {
           ui.clearGallery()
@@ -146,12 +142,13 @@ document.addEventListener('click', e => {
           traverseRepo(data.dir)
         })
       }
-      else if (item.parentElement.classList.contains('gallery-image')) {
+      else if (item.parentElement.classList.contains('gallery__image')) {
         // ui.openImage(item)
         ui.openOverlay(item.parentElement)
       }
-      else if (item.parentElement.classList.contains('file')) {
-        let url = item.querySelector('input').value
+      else if (item.parentElement.classList.contains('gallery__file')) {
+
+        let url = item.parentElement.querySelector('input').value
         window.open(url)
 
       }
@@ -165,5 +162,4 @@ document.addEventListener('click', e => {
 // To Do
 
 // Limit number of items on page - use generator/iterators
-
 // scope the SVG classes and Ids - use symbols and generators
