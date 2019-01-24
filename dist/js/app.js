@@ -26,7 +26,9 @@ const traverseRepo = function (repo) {
         ui.parseImage(imgURL, item.name, 'gallery__image', 'png')
       })
     }
-    else if (item.type == 'gallery__file' && isSVG.test(item.name)) {
+    else if (item.type == 'file' && isSVG.test(item.name)) {
+      console.log(`Parsing ${item.name} as an image icon`)
+
       github.openSVG(item).then(data => {
         ui.parseImage(data.svg, item.name, 'gallery__image', 'svg')
       })
@@ -35,10 +37,8 @@ const traverseRepo = function (repo) {
       //If item is a file but not a picture
       let tokens = item.name.split('.')
       let fileType = tokens.slice(-1)[0]
-
       github.getFileIcon(fileType.toLowerCase()).then(data => {
-        ui.parseImage(data.svg, item.name, 'gallery__file', 'svg')
-
+        ui.parseImage(data.svg, item.name, 'gallery__file', 'svg', item.html_url)
       })
     }
     else if (item.type == "dir") {
@@ -147,7 +147,8 @@ document.addEventListener('click', e => {
         ui.openOverlay(item.parentElement)
       }
       else if (item.parentElement.classList.contains('gallery__file')) {
-        let url = item.querySelector('input').value
+
+        let url = item.parentElement.querySelector('input').value
         window.open(url)
 
       }

@@ -60,9 +60,9 @@ class Github {
 
     const imageResponse = await fetch(url)
 
-    const image = await imageResponse.text();
+    const svg = await imageResponse.text();
     return {
-      image
+      svg
     }
 
   }
