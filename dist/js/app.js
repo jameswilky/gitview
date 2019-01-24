@@ -4,6 +4,9 @@ const github = new Github
 //Init UI
 const ui = new UI;
 
+//init image parser
+// const imageParser = new ImageParser
+
 let history = [];
 
 // Search input
@@ -20,12 +23,12 @@ const traverseRepo = function (repo) {
       //if file file is an image
       github.openImage(item).then(data => {
         imgURL = URL.createObjectURL(data.image)
-        ui.showImage(imgURL, item.name, ['gallery-image'], 'png')
+        ui.parseImage(imgURL, item.name, 'gallery__image', 'png')
       })
     }
-    else if (item.type == 'file' && isSVG.test(item.name)) {
+    else if (item.type == 'gallery__file' && isSVG.test(item.name)) {
       github.openSVG(item).then(data => {
-        ui.showImage(data.svg, item.name, ['gallery-image'], 'svg')
+        ui.parseImage(data.svg, item.name, 'gallery__image', 'svg')
       })
     }
     else if (item.type == "file") {
@@ -34,15 +37,15 @@ const traverseRepo = function (repo) {
       let fileType = tokens.slice(-1)[0]
 
       github.getFileIcon(fileType.toLowerCase()).then(data => {
-        ui.showImage(data.svg, item.name, ['file'], 'svg')
+        ui.parseImage(data.svg, item.name, 'gallery__file', 'svg')
 
       })
     }
     else if (item.type == "dir") {
-      ui.showImage(ui.folderIcon, item.name, ['folder'], 'png')
+      ui.parseImage(ui.folderIcon, item.name, 'gallery__folder', 'png', item.url)
 
       //If item is a folder
-      // ui.showIcon("folder", item.name, item.url, 'folder')
+      // ui.showIcon("folder", item.name, item.url, 'gallery__folder')
     }
 
   });
@@ -90,13 +93,13 @@ searchUser.addEventListener('keypress', (e) => {
 document.addEventListener('click', e => {
   // Folder view Toggle
   if (e.target == ui.folderToggle) {
-    ui.toggleItem('.folder', 'folderToggle');
+    ui.toggleItem('.gallery__folder', 'folderToggle');
     return
   }
 
   // File view Toggle
   if (e.target == ui.fileToggle) {
-    ui.toggleItem('.file', 'fileToggle');
+    ui.toggleItem('.gallery__file', 'fileToggle');
     return
   }
 
@@ -123,9 +126,6 @@ document.addEventListener('click', e => {
     return
   }
 
-
-
-
   // Check items too see if they were clicked
   ui.items = document.querySelectorAll('.item > *')
 
@@ -134,7 +134,7 @@ document.addEventListener('click', e => {
     if (item.contains(e.target)) {
 
       //Check if item is a folder
-      if (item.parentElement.classList.contains('folder')) {
+      if (item.parentElement.classList.contains('gallery__folder')) {
         let url = item.parentElement.querySelector('input').value
         github.openDir(url).then(data => {
           ui.clearGallery()
@@ -142,11 +142,11 @@ document.addEventListener('click', e => {
           traverseRepo(data.dir)
         })
       }
-      else if (item.parentElement.classList.contains('gallery-image')) {
+      else if (item.parentElement.classList.contains('gallery__image')) {
         // ui.openImage(item)
         ui.openOverlay(item.parentElement)
       }
-      else if (item.parentElement.classList.contains('file')) {
+      else if (item.parentElement.classList.contains('gallery__file')) {
         let url = item.querySelector('input').value
         window.open(url)
 

@@ -184,7 +184,7 @@
   align-self: center;
 }
 
-.item:not(.folder) > img {
+.item:not(.gallery__folder) > img {
   /*Handle Main Gallery Images*/
   /* grid-column: 1 / -1;
   grid-row: 1 / -1;

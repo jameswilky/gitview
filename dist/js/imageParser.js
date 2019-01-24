@@ -1,0 +1,7 @@
+class ImageParser {
+  constructor() {
+
+  }
+
+
+}
