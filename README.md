@@ -15,3 +15,6 @@ Below are a few sample repositories to test with the application:
 - https://github.com/akveo/eva-icons
 - https://github.com/leungwensen/svg-icon
 - https://github.com/simple-icons/simple-icons
+- https://github.com/art-programmer/FloorplanTransformation
+- https://github.com/mitmedialab/storyspace
+- https://github.com/jenkinsci/jenkins

@@ -16,7 +16,7 @@ const searchUser = document.getElementById('searchUser');
 const traverseRepo = function (repo) {
   repo.forEach(item => {
     //Identify if string ends in .png/.jpg/.tif/.gif
-    isImage = /..*[.](png|jpg|tif|gif)$/i
+    isImage = /..*[.](png|jpg|tiff|gif)$/i
     isSVG = /..*[.](svg)$/i
 
     if (item.type == "file" && isImage.test(item.name)) { //File is png file
