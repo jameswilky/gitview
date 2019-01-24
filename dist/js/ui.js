@@ -169,82 +169,7 @@ class UI {
 
   }
 
-  // parseImage(blob, name, classNames, fileType, url = '') {
-  //   // let image = document.createElement('img');
-  //   let image = new Image();
-  //   if (fileType == 'svg') {
-  //     this.svgToPng(blob, image) //svg to png
 
-  //   }
-  //   else if (fileType == 'png') {
-  //     image.src = blob
-
-  //   }
-  //   image.title = name
-  //   //Create image container
-  //   let item = document.createElement('div')
-  //   item.setAttribute('class', 'item')
-  //   classNames.forEach(className => {
-  //     item.classList.add(className)
-  //   })
-  //   item.appendChild(image)
-
-
-  //   if (classNames.includes('gallery__image')) {
-  //     // this.fitItem(item)
-  //   }
-  //   else {
-  //     let title = document.createElement('div')
-  //     title.innerHTML = name
-  //     item.appendChild(title)
-
-  //     // Add url link
-  //     let input = document.createElement('input')
-  //     input.setAttribute('type', 'hidden')
-  //     input.setAttribute('value', url)
-  //     item.appendChild(input)
-  //   }
-
-  //   //Add item to gallery
-  //   this.gallery.appendChild(item)
-  // }
-  // showImage(blob, name) {
-
-  //   // blob is an image object
-  //   let img = new Image();
-
-
-  //   img.onload = () => {
-  //     let output = '';
-  //     output += `
-  //     <div class="item gallery__image">
-  //       ${img.outerHTML}
-  //     </div>
-  //     `;
-  //     //Output repos
-  //     this.gallery.innerHTML += output;
-  //     this.fitItem(this.gallery.lastElementChild)
-  //   }
-  //   img.src = blob
-  //   img.title = name;
-  // }
-
-  // showSVG(image, name) {
-  //   let output = ''
-  //   output += `
-  //     <div class="item gallery__image">
-  //       ${image}
-  //       <div>
-  //       ${name}
-  //       <div/>
-  //       <input type="hidden">
-
-  //     </div>
-  //     `;
-  //   //Output repos
-  //   this.gallery.innerHTML += output;
-  //   this.gallery.lastChild.firstChild.title = name
-  // }
 
   svgToPng(svg, targetImage) {
     const blob = new Blob([svg], { type: 'image/svg+xml' });
@@ -253,47 +178,7 @@ class UI {
     targetImage.src = url;
   }
 
-  // showIcon(image, name, url, className) {
-  //   //temp
-  //   // console.log(image.children[0].sheet.cssRules)
 
-  //   let output = '';
-  //   output += `
-  //     <div class="item ${className} ${visibility}">
-  //       ${image}
-  //       <div>
-  //       ${name}
-  //       <div/>
-  //       <input type="hidden" value=${url}>
-
-  //     </div>
-  //     `;
-  //   //Output repos
-  //   this.gallery.innerHTML += output;
-  //   // console.log(this.gallery.lastChild)
-
-  //   // var svgString = new XMLSerializer().serializeToString(this.gallery.lastChild.firstElementChild);
-
-  //   // var canvas = document.getElementById("canvas");
-  //   // var ctx = canvas.getContext("2d");
-  //   // var DOMURL = self.URL || self.webkitURL || self;
-  //   // var img = new Image();
-  //   // var svg = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
-  //   // var url = DOMURL.createObjectURL(svg);
-  //   // img.onload = function () {
-  //   //   ctx.drawImage(img, 0, 0);
-  //   //   var png = canvas.toDataURL("image/png");
-  //   //   document.querySelector('#png-container').innerHTML = '<img src="' + png + '"/>';
-  //   //   DOMURL.revokeObjectURL(png);
-  //   // };
-  //   // img.src = url;
-  // }
-  // createFolder(name) {
-  //   let img = document.createElement('img')
-  //   img.src = this.folderIcon
-  //   img.title = name
-  //   return img.outerHTML
-  // }
 
   resizeItem(value) {
     let size;

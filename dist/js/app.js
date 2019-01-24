@@ -44,8 +44,6 @@ const traverseRepo = function (repo) {
     else if (item.type == "dir") {
       ui.parseImage(ui.folderIcon, item.name, 'gallery__folder', 'png', item.url)
 
-      //If item is a folder
-      // ui.showIcon("folder", item.name, item.url, 'gallery__folder')
     }
 
   });
@@ -157,9 +155,3 @@ document.addEventListener('click', e => {
   })
 
 })
-
-
-// To Do
-
-// Limit number of items on page - use generator/iterators
-// scope the SVG classes and Ids - use symbols and generators
